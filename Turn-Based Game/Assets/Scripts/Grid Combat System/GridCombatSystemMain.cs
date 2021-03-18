@@ -6,7 +6,8 @@ using GridPathfindingSystem;
 
 public class GridCombatSystemMain : MonoBehaviour {
 
-    public UnitGridCombat[] unitGridCombatArray;
+    public GameObject[] objectArray;
+    private UnitGridCombat[] unitGridCombatArray;
 
     private State state;
     public UnitGridCombat unitGridCombat;
@@ -33,6 +34,15 @@ public class GridCombatSystemMain : MonoBehaviour {
         redTeamList = new List<UnitGridCombat>();
         blueTeamActiveUnitIndex = -1;
         redTeamActiveUnitIndex = -1;
+
+        // Add UnitGridCombat with tag "Player" to array
+        // Source: https://answers.unity.com/questions/710833/using-getcomponent-with-an-array.html
+        objectArray = GameObject.FindGameObjectsWithTag("Player");
+        unitGridCombatArray = new UnitGridCombat[objectArray.Length];
+        for (int i = 0; i < objectArray.Length; i++)
+        {
+            unitGridCombatArray[i] = objectArray[i].GetComponent<UnitGridCombat>();
+        }
 
         // Set all UnitGridCombat on their GridPosition
         foreach (UnitGridCombat unitGridCombat in unitGridCombatArray) {

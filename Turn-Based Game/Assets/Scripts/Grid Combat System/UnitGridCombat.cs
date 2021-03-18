@@ -110,8 +110,8 @@ public class UnitGridCombat : MonoBehaviour {
 
     public void Damage(int damageAmount)
     {
-        healthSystem.Damage(damageAmount);
         healthDamageAmount = damageAmount;
+        healthSystem.Damage(damageAmount);
         Debug.Log(gameObject.name + " took " + damageAmount + " damage.");
         if (healthSystem.IsDead())
         {
