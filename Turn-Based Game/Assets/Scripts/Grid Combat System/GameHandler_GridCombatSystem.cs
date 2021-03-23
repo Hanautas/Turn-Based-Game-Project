@@ -8,9 +8,8 @@ public class GameHandler_GridCombatSystem : MonoBehaviour {
 
     public static GameHandler_GridCombatSystem Instance { get; private set; }
 
-    //public Transform cinemachineFollowTransform;
+    public Transform cameraTransform;
     public MovementTilemapVisual movementTilemapVisual;
-    //[SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
 
     private GridSystem<GridCombatSystemMain.GridObject> grid;
     private MovementTilemap movementTilemap;
@@ -23,13 +22,6 @@ public class GameHandler_GridCombatSystem : MonoBehaviour {
 
     private void Awake() {
         Instance = this;
-
-        /*
-        int mapWidth = 40;
-        int mapHeight = 30;
-        float cellSize = 1f;
-        Vector3 origin = new Vector3(0, 0);
-        */
 
         grid = new GridSystem<GridCombatSystemMain.GridObject>(mapWidth, mapHeight, cellSize, origin, (GridSystem<GridCombatSystemMain.GridObject> g, int x, int y) => new GridCombatSystemMain.GridObject(g, x, y));
 
@@ -66,33 +58,6 @@ public class GameHandler_GridCombatSystem : MonoBehaviour {
         */
     }
 
-    /*
-    private void Update() {
-        HandleCameraMovement();
-    }
-
-    
-    private void HandleCameraMovement() {
-        Vector3 moveDir = new Vector3(0, 0);
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
-            moveDir.y = +1;
-        }
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) {
-            moveDir.y = -1;
-        }
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) {
-            moveDir.x = -1;
-        }
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) {
-            moveDir.x = +1;
-        }
-        moveDir.Normalize();
-
-        float moveSpeed = 80f;
-        //cinemachineFollowTransform.position += moveDir * moveSpeed * Time.deltaTime;
-    }
-    */
-
     public GridSystem<GridCombatSystemMain.GridObject> GetGrid() {
         return grid;
     }
@@ -101,11 +66,9 @@ public class GameHandler_GridCombatSystem : MonoBehaviour {
         return movementTilemap;
     }
 
-    /*
     public void SetCameraFollowPosition(Vector3 targetPosition) {
-        cinemachineFollowTransform.position = targetPosition;
+        cameraTransform.position = targetPosition;
     }
-    */
 
     public class EmptyGridObject {
 

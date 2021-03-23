@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using GridCombatSystem.Utilities;
 using GridPathfindingSystem;
+using System.Linq;
 
 public class GridCombatSystemMain : MonoBehaviour {
 
-    public GameObject[] objectArray;
-    private UnitGridCombat[] unitGridCombatArray;
+    public GameObject[] playerObjectArray;
+    public GameObject[] enemyObjectArray;
+    public UnitGridCombat[] playerUnitGridCombatArray;
+    public UnitGridCombat[] enemyUnitGridCombatArray;
+    public UnitGridCombat[] unitGridCombatArray;
 
     private State state;
     public UnitGridCombat unitGridCombat;
@@ -35,14 +39,24 @@ public class GridCombatSystemMain : MonoBehaviour {
         blueTeamActiveUnitIndex = -1;
         redTeamActiveUnitIndex = -1;
 
-        // Add UnitGridCombat with tag "Player" to array
+        // Add UnitGridCombat with tag "Player" and "Enemy" to 2 arrays
         // Source: https://answers.unity.com/questions/710833/using-getcomponent-with-an-array.html
-        objectArray = GameObject.FindGameObjectsWithTag("Player");
-        unitGridCombatArray = new UnitGridCombat[objectArray.Length];
-        for (int i = 0; i < objectArray.Length; i++)
+        playerObjectArray = GameObject.FindGameObjectsWithTag("Player");
+        playerUnitGridCombatArray = new UnitGridCombat[playerObjectArray.Length];
+        for (int i = 0; i < playerObjectArray.Length; i++)
         {
-            unitGridCombatArray[i] = objectArray[i].GetComponent<UnitGridCombat>();
+            playerUnitGridCombatArray[i] = playerObjectArray[i].GetComponent<UnitGridCombat>();
         }
+
+        enemyObjectArray = GameObject.FindGameObjectsWithTag("Enemy");
+        enemyUnitGridCombatArray = new UnitGridCombat[enemyObjectArray.Length];
+        for (int i = 0; i < enemyObjectArray.Length; i++)
+        {
+            enemyUnitGridCombatArray[i] = enemyObjectArray[i].GetComponent<UnitGridCombat>();
+        }
+
+        // Merge player and enemy array
+        unitGridCombatArray = playerUnitGridCombatArray.Concat(enemyUnitGridCombatArray).ToArray();
 
         // Set all UnitGridCombat on their GridPosition
         foreach (UnitGridCombat unitGridCombat in unitGridCombatArray) {
@@ -68,7 +82,7 @@ public class GridCombatSystemMain : MonoBehaviour {
             unitGridCombat = GetNextActiveUnit(UnitGridCombat.Team.Red);
         }
 
-        //GameHandler_GridCombatSystem.Instance.SetCameraFollowPosition(unitGridCombat.GetPosition());
+        GameHandler_GridCombatSystem.Instance.SetCameraFollowPosition(unitGridCombat.GetPosition());
         canMoveThisTurn = true;
         canAttackThisTurn = true;
     }
@@ -144,7 +158,7 @@ public class GridCombatSystemMain : MonoBehaviour {
     private void Update() {
         switch (state) {
             case State.Normal:
-                if (Input.GetMouseButtonDown(0)) {
+                if (Input.GetMouseButtonDown(0) && UtilitiesClass.IsPointerOverUIObject() == false) {
                     GridSystem<GridObject> grid = GameHandler_GridCombatSystem.Instance.GetGrid();
                     GridObject gridObject = grid.GetGridObject(UtilitiesClass.GetMouseWorldPosition());
 
@@ -159,7 +173,6 @@ public class GridCombatSystemMain : MonoBehaviour {
                                     canAttackThisTurn = false;
                                     // Attack Enemy
                                     state = State.Waiting;
-                                    actionLog.OutputLog();
                                     unitGridCombat.AttackUnit(gridObject.GetUnitGridCombat(), () => {
                                         state = State.Normal;
                                         TestTurnOver();

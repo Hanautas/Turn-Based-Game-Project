@@ -9,19 +9,34 @@ public class UnitGridCombat : MonoBehaviour {
 
     public Team team;
 
-    //private Character_Base characterBase;
     private HealthSystem healthSystem;
-    //private GameObject selectedGameObject;
     private MovePositionPathfinding movePosition;
     private State state;
-    //private World_Bar healthBar;
 
-    public int unitMaxHealth;
-    public int unitCurrentHealth;
     public HealthBar healthBar;
     public Text healthText;
 
-    public int healthDamageAmount;
+    private GameObject unitIcon;
+    private Sprite unitSprite;
+    private GameObject deadPrefab;
+    private Sprite deadSprite;
+
+    [Header ("Stats")]
+    public string characterName = "NAME";
+    public int maxHealth;
+    public int currentHealth;
+    public int damage;
+    public int armorClass;
+    public int initiative;
+    public int moveSpeed = 30;
+
+    [Header ("Modifiers")]
+    public int strength;
+    public int dexterity;
+    public int constitution;
+    public int intelligence;
+    public int wisdom;
+    public int charisma;
 
     public enum Team {
         Blue,
@@ -35,30 +50,29 @@ public class UnitGridCombat : MonoBehaviour {
     }
 
     private void Awake() {
-        //characterBase = GetComponent<Character_Base>();
-        //selectedGameObject = transform.Find("Selected").gameObject;
         movePosition = GetComponent<MovePositionPathfinding>();
-        //SetSelectedVisible(false);
         state = State.Normal;
-        healthSystem = new HealthSystem(unitMaxHealth);
-        //healthBar = new World_Bar(transform, new Vector3(0, 10), new Vector3(10, 1.3f), Color.grey, Color.red, 1f, 10000, new World_Bar.Outline { color = Color.black, size = .5f });
-        //healthSystem.OnHealthChanged += HealthSystem_OnHealthChanged;
-
-        healthBar.SetMaxHealth(unitMaxHealth);
+        healthSystem = new HealthSystem(maxHealth);
+        healthBar.SetMaxHealth(maxHealth);
     }
 
-    /*
-    private void HealthSystem_OnHealthChanged(object sender, EventArgs e)
+    private void Start()
     {
-        healthBar.SetSize(healthSystem.GetHealthNormalized());
+        initiative = UnityEngine.Random.Range(1, 20);
+
+        deadPrefab = Resources.Load("Dead") as GameObject;
+
+        unitIcon = gameObject.transform.Find("Icon").gameObject;
+        unitSprite = unitIcon.GetComponent<SpriteRenderer>().sprite;
+
+        deadSprite = deadPrefab.GetComponent<SpriteRenderer>().sprite;
     }
-    */
 
     private void Update()
     {
-        unitCurrentHealth = healthSystem.health;
-        healthBar.SetHealth(unitCurrentHealth);
-        healthText.text = unitCurrentHealth + " / " + unitMaxHealth;
+        currentHealth = healthSystem.health;
+        healthBar.SetHealth(currentHealth);
+        healthText.text = currentHealth + " / " + maxHealth;
 
         switch (state) {
             case State.Normal:
@@ -69,13 +83,6 @@ public class UnitGridCombat : MonoBehaviour {
                 break;
         }
     }
-
-    /*
-    public void SetSelectedVisible(bool visible)
-    {
-        selectedGameObject.SetActive(visible);
-    }
-    */
 
     public void MoveTo(Vector3 targetPosition, Action onReachedPosition)
     {
@@ -104,19 +111,20 @@ public class UnitGridCombat : MonoBehaviour {
 
     private void ShootUnit(UnitGridCombat unitGridCombat, Action onShootComplete)
     {
-        unitGridCombat.Damage(UnityEngine.Random.Range(1, 20));
+        unitGridCombat.Damage(UnityEngine.Random.Range(1, 20), this);
         onShootComplete();
     }
 
-    public void Damage(int damageAmount)
+    public void Damage(int damageAmount, UnitGridCombat unitGridCombat)
     {
-        healthDamageAmount = damageAmount;
         healthSystem.Damage(damageAmount);
-        Debug.Log(gameObject.name + " took " + damageAmount + " damage.");
+        ActionLog.instance.OutputLog(unitGridCombat.characterName, damageAmount.ToString(), this.characterName);
+
         if (healthSystem.IsDead())
         {
             Debug.Log(gameObject.name + " is dead.");
             Destroy(gameObject);
+            SpawnDead();
         }
     }
 
@@ -125,9 +133,16 @@ public class UnitGridCombat : MonoBehaviour {
         return healthSystem.IsDead();
     }
 
+    public void SpawnDead()
+    {
+        GameObject deadObject = Instantiate(deadPrefab, transform.position, Quaternion.identity) as GameObject;
+        deadObject.GetComponent<SpriteRenderer>().sprite = unitSprite;
+        deadObject.transform.Rotate(0, 0, -90);
+    }
+
     public Vector3 GetPosition()
     {
-        return transform.position;
+        return new Vector3(transform.position.x, transform.position.y, -10);
     }
 
     public Team GetTeam()

@@ -5,28 +5,43 @@ using UnityEngine.UI;
 
 public class ActionLog : MonoBehaviour
 {
-    private HealthSystem healthSystem;
-    public Text actionText;
+    public static ActionLog instance;
+
     public GridCombatSystemMain gridCombatSystem;
-    private string currentUnit;
-    private string damageDealt;
-    private string targetUnit;
+    private HealthSystem healthSystem;
+    
+    public Transform contentObject;
+    public ScrollRect scrollRect;
+    private Vector2 scrollPosition = new Vector2(0, 0);
+
+    public GameObject textPrefab;
+    private Text actionText;
 
     void Start()
     {
-        actionText.text = "";
+        instance = this;
+        textPrefab = Resources.Load("ActionText") as GameObject;
     }
 
     void Update()
     {
-        gridCombatSystem = gridCombatSystem.GetComponent<GridCombatSystemMain>();
-        currentUnit = gridCombatSystem.unitGridCombat.gameObject.name.ToString();
-        damageDealt = gridCombatSystem.unitGridCombat.healthDamageAmount.ToString();
-        targetUnit = gridCombatSystem.unitGridCombat.gameObject.name.ToString();
+
     }
 
-    public void OutputLog()
+    public void OutputLog(string currentUnit, string damageDealt, string targetUnit)
     {
-        actionText.text = currentUnit + " dealt " + damageDealt + " damage to " + targetUnit;
+        GameObject textObject = Instantiate(textPrefab, transform.position, Quaternion.identity) as GameObject;
+        textObject.transform.SetParent(contentObject, false);
+
+        actionText = textObject.GetComponent<Text>();
+        actionText.text = currentUnit + " dealt " + damageDealt + " damage to " + targetUnit + "!";
+
+        StartCoroutine(SetScrollValue());
+    }
+
+    public IEnumerator SetScrollValue()
+    {
+        yield return null;
+        scrollRect.normalizedPosition = scrollPosition;
     }
 }

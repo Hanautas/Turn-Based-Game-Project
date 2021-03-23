@@ -18,7 +18,7 @@ public class MovePositionPathfinding : MonoBehaviour
 
         foreach (Vector3 vec in pathVectorList)
         {
-            Debug.Log(vec);
+            //Debug.Log(vec);
         }
 
         if (pathVectorList.Count > 0)
