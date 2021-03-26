@@ -1,63 +1,78 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InitiativeRoll : MonoBehaviour
 {
-    public Transform contentObject;
-    public GameObject initiativePrefab;
-
-    public GameObject[] objectArray;
+    public GridCombatSystemMain gridCombatSystem;
     public UnitGridCombat[] playerUnitArray;
-    private UnitGridCombat tempUnit;
 
-    public GameObject[] contentArray;
-    public GameObject[] nameArray;
-    public GameObject[] iconArray;
-    public GameObject[] rollArray;
+    public Transform contentObject;
+    public GameObject waitText;
+    public GameObject rollButton;
+    private GameObject initiativePrefab;
+    private GameObject initiativeObject;
 
-    private Sprite unitSprite;
     private string nameText;
-    private int rollText;
+    private int initiativeText;
+    private Sprite unitSprite;
+
+    private float desiredNumber;
+    private float initialNumber;
+    private float currentNumber;
+    private float unitNumber;
+
+    private bool startRoll = false;
 
     void Start()
     {
-        initiativePrefab = Resources.Load("initiativePanel") as GameObject;
-
-        foreach (GameObject name in nameArray)
-        {
-            //nameArray = gameObject.transform.Find("Name").gameObject;
-        }
-
-        objectArray = GameObject.FindGameObjectsWithTag("Player");
-        playerUnitArray = new UnitGridCombat[objectArray.Length];
-        for (int i = 0; i < objectArray.Length; i++)
-        {
-            playerUnitArray[i] = objectArray[i].GetComponent<UnitGridCombat>();
-        }
+        StartCoroutine(GetPlayerUnits());
     }
 
     void Update()
     {
-        
+        if (startRoll == true)
+        {
+            foreach (UnitGridCombat unit in playerUnitArray)
+            {
+                initiativeText = unit.initiative;
+                contentObject.transform.Find( "InitiativePanel" + unit.characterName).Find("Unit Initiative").GetComponent<Text>().text = initiativeText.ToString();
+            }
+        }
     }
 
-    public void AddUnitInitiative()
+    public IEnumerator GetPlayerUnits()
     {
-        GameObject initiativeObject = Instantiate(initiativePrefab, transform.position, Quaternion.identity) as GameObject;
-        initiativeObject.transform.SetParent(contentObject, false);
+        yield return new WaitForSeconds(0.5f);
+
+        waitText.SetActive(false);
+        rollButton.SetActive(true);
+        playerUnitArray = gridCombatSystem.playerUnitGridCombatArray;
+        initiativePrefab = Resources.Load("initiativePanel") as GameObject;
+
+        foreach (UnitGridCombat unit in playerUnitArray)
+        {
+            nameText = unit.characterName;
+            unitSprite = unit.transform.Find("Icon").GetComponent<SpriteRenderer>().sprite;
+
+            initiativeObject = Instantiate(initiativePrefab, transform.position, Quaternion.identity) as GameObject;
+            initiativeObject.transform.SetParent(contentObject, false);
         
-        initiativeObject.GetComponent<SpriteRenderer>().sprite = unitSprite;
+            initiativeObject.transform.Find("Unit Name").GetComponent<Text>().text = nameText;
+            initiativeObject.transform.Find("Unit Initiative").GetComponent<Text>().text = "0";
+            initiativeObject.transform.Find("Unit Icon").GetComponent<Image>().sprite = unitSprite;
+
+            initiativeObject.name = "InitiativePanel" + unit.characterName;
+        }
     }
 
     public void RollInitiative()
     {
-        for (int i = 0; i < playerUnitArray.Length; i++)
+        startRoll = true;
+        foreach (UnitGridCombat unit in playerUnitArray)
         {
-            int rng = Random.Range(0, playerUnitArray.Length);
-            tempUnit = playerUnitArray[rng];
-            playerUnitArray[rng] = playerUnitArray[i];
-            playerUnitArray[i] = tempUnit;
+            unit.SetInitiative();
         }
     }
 }

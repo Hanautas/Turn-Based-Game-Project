@@ -6,9 +6,8 @@ using GridPathfindingSystem;
 using System.Linq;
 
 public class GridCombatSystemMain : MonoBehaviour {
-
-    public GameObject[] playerObjectArray;
-    public GameObject[] enemyObjectArray;
+    private GameObject[] playerObjectArray;
+    private GameObject[] enemyObjectArray;
     public UnitGridCombat[] playerUnitGridCombatArray;
     public UnitGridCombat[] enemyUnitGridCombatArray;
     public UnitGridCombat[] unitGridCombatArray;
@@ -21,8 +20,6 @@ public class GridCombatSystemMain : MonoBehaviour {
     private int redTeamActiveUnitIndex;
     private bool canMoveThisTurn;
     private bool canAttackThisTurn;
-
-    public ActionLog actionLog;
 
     private enum State {
         Normal,
@@ -71,8 +68,6 @@ public class GridCombatSystemMain : MonoBehaviour {
 
         SelectNextActiveUnit();
         UpdateValidMovePositions();
-
-        actionLog = actionLog.GetComponent<ActionLog>();
     }
 
     private void SelectNextActiveUnit() {
@@ -180,16 +175,13 @@ public class GridCombatSystemMain : MonoBehaviour {
                                 }
                             } else {
                                 // Cannot attack enemy
-                                Debug.Log("Cannot attack enemy.");
                             }
                             break;
                         } else {
                             // Not an enemy
-                            Debug.Log("Not an enemy.");
                         }
                     } else {
                         // No unit here
-                        Debug.Log("No unit here.");
                     }
 
                     if (gridObject.GetIsValidMovePosition()) {
@@ -225,6 +217,16 @@ public class GridCombatSystemMain : MonoBehaviour {
                 break;
             case State.Waiting:
                 break;
+        }
+
+        // Flip team blue unit icon with F key
+        if (Input.GetKeyDown(KeyCode.F) && unitGridCombat.team == UnitGridCombat.Team.Blue && unitGridCombat.unitIcon.transform.rotation.y == 0)
+        {
+            unitGridCombat.unitIcon.transform.Rotate(0, 180, 0);
+        }
+        else if (Input.GetKeyDown(KeyCode.F) && unitGridCombat.team == UnitGridCombat.Team.Blue && unitGridCombat.unitIcon.transform.rotation.y != 0)
+        {
+            unitGridCombat.unitIcon.transform.Rotate(0, -180, 0);
         }
     }
 

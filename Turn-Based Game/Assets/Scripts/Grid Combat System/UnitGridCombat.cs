@@ -16,10 +16,14 @@ public class UnitGridCombat : MonoBehaviour {
     public HealthBar healthBar;
     public Text healthText;
 
-    private GameObject unitIcon;
+    public GameObject unitIcon;
     private Sprite unitSprite;
     private GameObject deadPrefab;
     private Sprite deadSprite;
+
+    public float desiredNumber;
+    private float initialNumber;
+    private float currentNumber;
 
     [Header ("Stats")]
     public string characterName = "NAME";
@@ -58,13 +62,10 @@ public class UnitGridCombat : MonoBehaviour {
 
     private void Start()
     {
-        initiative = UnityEngine.Random.Range(1, 20);
-
-        deadPrefab = Resources.Load("Dead") as GameObject;
-
         unitIcon = gameObject.transform.Find("Icon").gameObject;
         unitSprite = unitIcon.GetComponent<SpriteRenderer>().sprite;
 
+        deadPrefab = Resources.Load("Dead") as GameObject;
         deadSprite = deadPrefab.GetComponent<SpriteRenderer>().sprite;
     }
 
@@ -82,6 +83,26 @@ public class UnitGridCombat : MonoBehaviour {
             case State.Attacking:
                 break;
         }
+
+        if (currentNumber != desiredNumber)
+        {
+            if (initialNumber < desiredNumber)
+            {
+                currentNumber += Time.deltaTime * (desiredNumber - initialNumber);
+                if (currentNumber >= desiredNumber)
+                {
+                    currentNumber = desiredNumber;
+                }
+            }
+
+            initiative = (int)currentNumber;
+        }
+    }
+
+    public void SetInitiative()
+    {
+        initialNumber = currentNumber;
+        desiredNumber = UnityEngine.Random.Range(1, 20);
     }
 
     public void MoveTo(Vector3 targetPosition, Action onReachedPosition)
@@ -118,7 +139,7 @@ public class UnitGridCombat : MonoBehaviour {
     public void Damage(int damageAmount, UnitGridCombat unitGridCombat)
     {
         healthSystem.Damage(damageAmount);
-        ActionLog.instance.OutputLog(unitGridCombat.characterName, damageAmount.ToString(), this.characterName);
+        ActionLog.instance.OutputDamageLog(unitGridCombat.characterName, damageAmount.ToString(), this.characterName);
 
         if (healthSystem.IsDead())
         {
@@ -138,6 +159,8 @@ public class UnitGridCombat : MonoBehaviour {
         GameObject deadObject = Instantiate(deadPrefab, transform.position, Quaternion.identity) as GameObject;
         deadObject.GetComponent<SpriteRenderer>().sprite = unitSprite;
         deadObject.transform.Rotate(0, 0, -90);
+
+        ActionLog.instance.OutputDeathLog(this.characterName);
     }
 
     public Vector3 GetPosition()

@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GridCombatSystem.Utilities;
 
 public class CameraMovement : MonoBehaviour
 {
-    public Transform target;
-
     public Camera playerCamera;
     private Vector3 dragOrigin;
 
@@ -15,10 +14,10 @@ public class CameraMovement : MonoBehaviour
 
     public SpriteRenderer mapRenderer;
 
-    public float mapMinX;
-    public float mapMinY;
-    public float mapMaxX;
-    public float mapMaxY;
+    private float mapMinX;
+    private float mapMinY;
+    private float mapMaxX;
+    private float mapMaxY;
 
 
     void Start()
@@ -73,7 +72,7 @@ public class CameraMovement : MonoBehaviour
 
     private void WheelZoom()
     {
-        if (Input.mouseScrollDelta.y > 0)
+        if (Input.mouseScrollDelta.y > 0 && UtilitiesClass.IsPointerOverUIObject() == false)
         {
             float newSize = playerCamera.orthographicSize - zoomStep;
             playerCamera.orthographicSize = Mathf.Clamp(newSize, minCameraSize, maxCameraSize);
@@ -81,7 +80,7 @@ public class CameraMovement : MonoBehaviour
             playerCamera.transform.position = ClampCamera(playerCamera.transform.position);
         }
 
-        if (Input.mouseScrollDelta.y < 0)
+        if (Input.mouseScrollDelta.y < 0 && UtilitiesClass.IsPointerOverUIObject() == false)
         {
             float newSize = playerCamera.orthographicSize + zoomStep;
             playerCamera.orthographicSize = Mathf.Clamp(newSize, minCameraSize, maxCameraSize);
