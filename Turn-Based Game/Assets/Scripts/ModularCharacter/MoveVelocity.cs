@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class MoveVelocity : MonoBehaviour, IMoveVelocity {
 
-    public float moveSpeed;
+    private float moveSpeed;
 
     private Vector3 velocityVector;
     private Rigidbody2D rb2D;
 
     private void Awake() {
         rb2D = GetComponent<Rigidbody2D>();
+
+        moveSpeed = 2.5f;
     }
 
     public void SetVelocity(Vector3 velocityVector) {

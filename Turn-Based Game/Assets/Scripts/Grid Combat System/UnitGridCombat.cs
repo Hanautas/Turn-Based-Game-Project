@@ -9,7 +9,7 @@ public class UnitGridCombat : MonoBehaviour {
 
     public Team team;
 
-    private HealthSystem healthSystem;
+    public HealthSystem healthSystem;
     private MovePositionPathfinding movePosition;
     private State state;
 
@@ -17,13 +17,15 @@ public class UnitGridCombat : MonoBehaviour {
     public Text healthText;
 
     public GameObject unitIcon;
-    private Sprite unitSprite;
+    private SpriteRenderer unitSprite;
     private GameObject deadPrefab;
-    private Sprite deadSprite;
 
     public float desiredNumber;
-    private float initialNumber;
     private float currentNumber;
+
+    public GameObject unitTurnPanel;
+
+    public Animator animator;
 
     [Header ("Stats")]
     public string characterName = "NAME";
@@ -47,7 +49,7 @@ public class UnitGridCombat : MonoBehaviour {
         Red
     }
 
-    private enum State {
+    public enum State {
         Normal,
         Moving,
         Attacking
@@ -63,10 +65,11 @@ public class UnitGridCombat : MonoBehaviour {
     private void Start()
     {
         unitIcon = gameObject.transform.Find("Icon").gameObject;
-        unitSprite = unitIcon.GetComponent<SpriteRenderer>().sprite;
+        unitSprite = unitIcon.GetComponent<SpriteRenderer>();
 
         deadPrefab = Resources.Load("Dead") as GameObject;
-        deadSprite = deadPrefab.GetComponent<SpriteRenderer>().sprite;
+
+        animator = unitIcon.GetComponent<Animator>();
     }
 
     private void Update()
@@ -84,15 +87,13 @@ public class UnitGridCombat : MonoBehaviour {
                 break;
         }
 
+        // Sliding initiative number
         if (currentNumber != desiredNumber)
         {
-            if (initialNumber < desiredNumber)
+            currentNumber += Time.deltaTime * (desiredNumber - 0);
+            if (currentNumber >= desiredNumber)
             {
-                currentNumber += Time.deltaTime * (desiredNumber - initialNumber);
-                if (currentNumber >= desiredNumber)
-                {
-                    currentNumber = desiredNumber;
-                }
+                currentNumber = desiredNumber;
             }
 
             initiative = (int)currentNumber;
@@ -101,7 +102,7 @@ public class UnitGridCombat : MonoBehaviour {
 
     public void SetInitiative()
     {
-        initialNumber = currentNumber;
+        currentNumber = 0;
         desiredNumber = UnityEngine.Random.Range(1, 20);
     }
 
@@ -145,6 +146,10 @@ public class UnitGridCombat : MonoBehaviour {
         {
             Debug.Log(gameObject.name + " is dead.");
             Destroy(gameObject);
+
+            unitTurnPanel = GameObject.Find("UnitTurnPanel " + name);
+            unitTurnPanel.SetActive(false);
+
             SpawnDead();
         }
     }
@@ -157,7 +162,7 @@ public class UnitGridCombat : MonoBehaviour {
     public void SpawnDead()
     {
         GameObject deadObject = Instantiate(deadPrefab, transform.position, Quaternion.identity) as GameObject;
-        deadObject.GetComponent<SpriteRenderer>().sprite = unitSprite;
+        deadObject.GetComponent<SpriteRenderer>().sprite = unitSprite.sprite;
         deadObject.transform.Rotate(0, 0, -90);
 
         ActionLog.instance.OutputDeathLog(this.characterName);
@@ -171,6 +176,11 @@ public class UnitGridCombat : MonoBehaviour {
     public Team GetTeam()
     {
         return team;
+    }
+
+    public State GetState()
+    {
+        return state;
     }
 
     public bool IsEnemy(UnitGridCombat unitGridCombat)

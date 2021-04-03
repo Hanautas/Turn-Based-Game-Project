@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class TurnOrder : MonoBehaviour
 {
     public GridCombatSystemMain gridCombatSystem;
-    public UnitGridCombat[] unitArray;
 
     public Transform contentObject;
     public GameObject turnPrefab;
@@ -18,6 +17,8 @@ public class TurnOrder : MonoBehaviour
     private string nameText;
     private float initiativeText;
     private Sprite unitSprite;
+
+    private int tmp;
 
     void Start()
     {
@@ -31,22 +32,13 @@ public class TurnOrder : MonoBehaviour
 
     public void AddUnitTurn()
     {
-        unitArray = gridCombatSystem.unitGridCombatArray;
-
         turnPrefab = Resources.Load("UnitTurnPanel") as GameObject;
 
-        foreach (UnitGridCombat unit in unitArray)
+        foreach (UnitGridCombat unit in gridCombatSystem.unitGridCombatArray)
         {
             nameText = unit.characterName;
             unitSprite = unit.transform.Find("Icon").GetComponent<SpriteRenderer>().sprite;
-            if (unit.team == UnitGridCombat.Team.Blue)
-            {
-                initiativeText = unit.desiredNumber;
-            }
-            else
-            {
-                initiativeText = UnityEngine.Random.Range(1, 20);
-            }
+            initiativeText = unit.desiredNumber;
 
             GameObject turnObject = Instantiate(turnPrefab, transform.position, Quaternion.identity) as GameObject;
             turnObject.transform.SetParent(contentObject, false);
@@ -54,6 +46,29 @@ public class TurnOrder : MonoBehaviour
             turnObject.transform.Find("Unit Name").GetComponent<Text>().text = nameText;
             turnObject.transform.Find("Unit Initiative").GetComponent<Text>().text = initiativeText.ToString();
             turnObject.transform.Find("Unit Icon").GetComponent<Image>().sprite = unitSprite;
+
+            turnObject.name = "UnitTurnPanel " + unit.name;
+        }
+    }
+
+    public void ActiveUnitTurn()
+    {
+        foreach (UnitGridCombat unit in gridCombatSystem.unitGridCombatArray)
+        {
+            if (unit == gridCombatSystem.unitGridCombat)
+            {
+                // Make background color blue
+                contentObject.transform.Find("UnitTurnPanel " + unit.name).GetComponent<Image>().color = new Color32(100, 200, 255, 255);
+            }
+            else if (unit == null)
+            {
+
+            }
+            else
+            {
+                // Make background color grey
+                contentObject.transform.Find("UnitTurnPanel " + unit.name).GetComponent<Image>().color = new Color32(225, 225, 225, 255);
+            }
         }
     }
 }

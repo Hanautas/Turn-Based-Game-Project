@@ -94,6 +94,4 @@ public class MovementTilemapVisual : MonoBehaviour {
         mesh.uv = uv;
         mesh.triangles = triangles;
     }
-
 }
-

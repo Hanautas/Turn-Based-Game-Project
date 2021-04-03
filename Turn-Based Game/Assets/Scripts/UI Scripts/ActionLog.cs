@@ -19,44 +19,52 @@ public class ActionLog : MonoBehaviour
     {
         instance = this;
         textPrefab = Resources.Load("ActionTextPanel") as GameObject;
+
+        //InvokeRepeating("Advertisement", 0, 120);
     }
 
-    void Update()
+    public void InstantiateTextLog()
     {
+        GameObject textObject = Instantiate(textPrefab, transform.position, Quaternion.identity) as GameObject;
+        textObject.transform.SetParent(contentObject, false);
 
+        actionPanel = textObject.GetComponent<Image>();
+        actionText = textObject.transform.Find("Action Text").GetComponent<Text>();
+
+        StartCoroutine(SetScrollValue());
     }
 
     public void OutputDamageLog(string currentUnit, string damageDealt, string targetUnit)
     {
-        GameObject textObject = Instantiate(textPrefab, transform.position, Quaternion.identity) as GameObject;
-        textObject.transform.SetParent(contentObject, false);
-
-        actionPanel = textObject.GetComponent<Image>();
+        InstantiateTextLog();
         actionPanel.color = new Color32(100, 200, 255, 255);
-
-        actionText = textObject.transform.Find("Action Text").GetComponent<Text>();
         actionText.text = currentUnit + " dealt " + damageDealt + " damage to " + targetUnit + "!";
+    }
 
-        StartCoroutine(SetScrollValue());
+    public void OutputHealLog(string currentUnit, int value)
+    {
+        InstantiateTextLog();
+        actionPanel.color = new Color32(100, 255, 100, 255);
+        actionText.text = currentUnit + " healed for " + value.ToString() + " health!";
     }
 
     public void OutputDeathLog(string currentUnit)
     {
-        GameObject textObject = Instantiate(textPrefab, transform.position, Quaternion.identity) as GameObject;
-        textObject.transform.SetParent(contentObject, false);
-
-        actionPanel = textObject.GetComponent<Image>();
+        InstantiateTextLog();
         actionPanel.color = new Color32(255, 100, 100, 255);
-
-        actionText = textObject.transform.Find("Action Text").GetComponent<Text>();
         actionText.text = currentUnit + " is down!";
-
-        StartCoroutine(SetScrollValue());
     }
 
     public IEnumerator SetScrollValue()
     {
-        yield return null;
+        yield return new WaitForSeconds(0.1f);
         scrollRect.normalizedPosition = scrollPosition;
+    }
+
+    public void Advertisement()
+    {
+        InstantiateTextLog();
+        actionPanel.color = new Color32(225, 225, 225, 255);
+        actionText.text = "This game is a work in progress.";
     }
 }

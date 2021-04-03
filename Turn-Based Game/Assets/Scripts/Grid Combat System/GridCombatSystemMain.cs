@@ -16,10 +16,15 @@ public class GridCombatSystemMain : MonoBehaviour {
     public UnitGridCombat unitGridCombat;
     private List<UnitGridCombat> blueTeamList;
     private List<UnitGridCombat> redTeamList;
-    private int blueTeamActiveUnitIndex;
-    private int redTeamActiveUnitIndex;
+    //private int blueTeamActiveUnitIndex;
+    //private int redTeamActiveUnitIndex;
     private bool canMoveThisTurn;
     private bool canAttackThisTurn;
+
+    public TurnOrder turnOrder;
+    private int arrayIndex;
+
+    public GameObject[] playerUI;
 
     private enum State {
         Normal,
@@ -33,8 +38,8 @@ public class GridCombatSystemMain : MonoBehaviour {
     private void Start() {
         blueTeamList = new List<UnitGridCombat>();
         redTeamList = new List<UnitGridCombat>();
-        blueTeamActiveUnitIndex = -1;
-        redTeamActiveUnitIndex = -1;
+        //blueTeamActiveUnitIndex = -1;
+        //redTeamActiveUnitIndex = -1;
 
         // Add UnitGridCombat with tag "Player" and "Enemy" to 2 arrays
         // Source: https://answers.unity.com/questions/710833/using-getcomponent-with-an-array.html
@@ -66,10 +71,88 @@ public class GridCombatSystemMain : MonoBehaviour {
             }
         }
 
-        SelectNextActiveUnit();
-        UpdateValidMovePositions();
+        //SelectNextActiveUnit();
+        //UpdateValidMovePositions();
+
+        canMoveThisTurn = true;
+        canAttackThisTurn = true;
     }
 
+    private void SelectNextActiveUnit()
+    {
+        if (arrayIndex >= unitGridCombatArray.Length - 1)
+        {
+            arrayIndex = 0;
+            Debug.Log("Unit Array Index: " + arrayIndex);
+        }
+        else
+        {
+            arrayIndex += 1;
+            Debug.Log("Unit Array Index: " + arrayIndex);
+        }
+
+        unitGridCombat = unitGridCombatArray[arrayIndex];
+
+        GameHandler_GridCombatSystem.Instance.SetCameraFollowPosition(unitGridCombat.GetPosition());
+        canMoveThisTurn = true;
+        canAttackThisTurn = true;
+
+        // Highlight the next active unit in the turn order
+        turnOrder.ActiveUnitTurn();
+
+        CurrentUnitUI();
+    }
+
+    public void SortUnitArray()
+    {
+        unitGridCombatArray = unitGridCombatArray.OrderBy(x => x.GetComponent<UnitGridCombat>().initiative).ToArray();
+        System.Array.Reverse(unitGridCombatArray);
+        unitGridCombat = unitGridCombatArray[0];
+
+        GameHandler_GridCombatSystem.Instance.SetCameraFollowPosition(unitGridCombat.GetPosition());
+
+        //SelectNextActiveUnit();
+        UpdateValidMovePositions();
+
+        // Highlight current unit in turn order
+        turnOrder.ActiveUnitTurn();
+
+        CurrentUnitUI();
+    }
+
+    public void CurrentUnitUI()
+    {
+        // Hide player UI on enemy turn
+        foreach (GameObject obj in playerUI)
+        {
+            if (unitGridCombat.GetTeam() == UnitGridCombat.Team.Red)
+            {
+                obj.SetActive(false);
+            }
+            else
+            {
+                obj.SetActive(true);
+            }
+        }
+
+        // Flash color on the current unit while idle
+        foreach (UnitGridCombat unit in unitGridCombatArray)
+        {
+            if (unit != null)
+            {
+                if (unit == unitGridCombat && unitGridCombat.GetState() == UnitGridCombat.State.Normal)
+                {
+                    unit.animator.SetBool("Active Unit", true);
+                }
+                else
+                {
+                    unit.animator.SetBool("Active Unit", false);
+                }
+            }
+        }
+    }
+
+    /*
     private void SelectNextActiveUnit() {
         if (unitGridCombat == null || unitGridCombat.GetTeam() == UnitGridCombat.Team.Red) {
             unitGridCombat = GetNextActiveUnit(UnitGridCombat.Team.Blue);
@@ -80,6 +163,9 @@ public class GridCombatSystemMain : MonoBehaviour {
         GameHandler_GridCombatSystem.Instance.SetCameraFollowPosition(unitGridCombat.GetPosition());
         canMoveThisTurn = true;
         canAttackThisTurn = true;
+
+        // Highlight the next active unit in the turn order
+        turnOrder.GetComponent<TurnOrder>().ActiveUnitTurn();
     }
 
     private UnitGridCombat GetNextActiveUnit(UnitGridCombat.Team team) {
@@ -101,6 +187,7 @@ public class GridCombatSystemMain : MonoBehaviour {
             }
         }
     }
+    */
 
     private void UpdateValidMovePositions() {
         GridSystem<GridObject> grid = GameHandler_GridCombatSystem.Instance.GetGrid();
@@ -121,7 +208,8 @@ public class GridCombatSystemMain : MonoBehaviour {
             }
         }
 
-        int maxMoveDistance = 5;
+        //int maxMoveDistance = 5;
+        int maxMoveDistance = (unitGridCombat.moveSpeed + 5) / 5;
         for (int x = unitX - maxMoveDistance; x <= unitX + maxMoveDistance; x++) {
             for (int y = unitY - maxMoveDistance; y <= unitY + maxMoveDistance; y++) {
                 if (gridPathfinding.IsWalkable(x, y)) {

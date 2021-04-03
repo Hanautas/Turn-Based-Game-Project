@@ -7,6 +7,7 @@ public class InitiativeRoll : MonoBehaviour
 {
     public GridCombatSystemMain gridCombatSystem;
     public UnitGridCombat[] playerUnitArray;
+    public UnitGridCombat[] unitArray;
 
     public Transform contentObject;
     public GameObject waitText;
@@ -39,12 +40,23 @@ public class InitiativeRoll : MonoBehaviour
                 initiativeText = unit.initiative;
                 contentObject.transform.Find( "InitiativePanel" + unit.characterName).Find("Unit Initiative").GetComponent<Text>().text = initiativeText.ToString();
             }
+
+            StartCoroutine(EndRoll());
         }
+
+        unitArray = gridCombatSystem.unitGridCombatArray;
+    }
+
+    public IEnumerator EndRoll()
+    {
+        yield return new WaitForSeconds(5);
+
+        startRoll = false;
     }
 
     public IEnumerator GetPlayerUnits()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
 
         waitText.SetActive(false);
         rollButton.SetActive(true);
@@ -70,7 +82,8 @@ public class InitiativeRoll : MonoBehaviour
     public void RollInitiative()
     {
         startRoll = true;
-        foreach (UnitGridCombat unit in playerUnitArray)
+
+        foreach (UnitGridCombat unit in unitArray)
         {
             unit.SetInitiative();
         }
