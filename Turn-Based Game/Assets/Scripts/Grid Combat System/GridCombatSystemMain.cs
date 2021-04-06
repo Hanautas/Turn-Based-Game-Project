@@ -83,14 +83,22 @@ public class GridCombatSystemMain : MonoBehaviour {
         if (arrayIndex >= unitGridCombatArray.Length - 1)
         {
             arrayIndex = 0;
-            Debug.Log("Unit Array Index: " + arrayIndex);
+            Debug.Log(arrayIndex);
         }
         else
         {
-            arrayIndex += 1;
-            Debug.Log("Unit Array Index: " + arrayIndex);
+            for (int i = arrayIndex; i < unitGridCombatArray.Length - 1; i++)
+            {
+                if (unitGridCombatArray[i + 1] != null)
+                {
+                    arrayIndex = i + 1;
+                    Debug.Log(arrayIndex);
+                    break;
+                }
+            }
         }
 
+        // Assign the next unit in unit array to active unit
         unitGridCombat = unitGridCombatArray[arrayIndex];
 
         GameHandler_GridCombatSystem.Instance.SetCameraFollowPosition(unitGridCombat.GetPosition());
@@ -100,6 +108,7 @@ public class GridCombatSystemMain : MonoBehaviour {
         // Highlight the next active unit in the turn order
         turnOrder.ActiveUnitTurn();
 
+        // Show UI for player units
         CurrentUnitUI();
     }
 

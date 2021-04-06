@@ -6,13 +6,14 @@ using GridCombatSystem.Utilities;
 public class CameraMovement : MonoBehaviour
 {
     public Camera playerCamera;
+    public SpriteRenderer mapRenderer;
     private Vector3 dragOrigin;
 
-    public float zoomStep;
-    public float minCameraSize;
-    public float maxCameraSize;
+    private float cameraSpeed;
 
-    public SpriteRenderer mapRenderer;
+    private float zoomStep;
+    private float minCameraSize;
+    private float maxCameraSize;
 
     private float mapMinX;
     private float mapMinY;
@@ -35,8 +36,21 @@ public class CameraMovement : MonoBehaviour
 
     void Update()
     {
+        MoveCamera();
         PanCamera();
         WheelZoom();
+    }
+
+    private void MoveCamera()
+    {
+        float xDirection = Input.GetAxis("Horizontal");
+        float yDirection = Input.GetAxis("Vertical");
+
+        Vector3 moveDirection = new Vector3(xDirection, yDirection, 0.0f);
+
+        transform.position += moveDirection * cameraSpeed;
+
+        playerCamera.transform.position = ClampCamera(playerCamera.transform.position);
     }
 
     private void PanCamera()
@@ -60,6 +74,8 @@ public class CameraMovement : MonoBehaviour
         playerCamera.orthographicSize = Mathf.Clamp(newSize, minCameraSize, maxCameraSize);
 
         playerCamera.transform.position = ClampCamera(playerCamera.transform.position);
+
+        cameraSpeed = playerCamera.orthographicSize * 0.0175f;
     }
 
     public void ZoomOut()
@@ -68,6 +84,8 @@ public class CameraMovement : MonoBehaviour
         playerCamera.orthographicSize = Mathf.Clamp(newSize, minCameraSize, maxCameraSize);
 
         playerCamera.transform.position = ClampCamera(playerCamera.transform.position);
+
+        cameraSpeed = playerCamera.orthographicSize * 0.0175f;
     }
 
     private void WheelZoom()
@@ -87,6 +105,8 @@ public class CameraMovement : MonoBehaviour
 
             playerCamera.transform.position = ClampCamera(playerCamera.transform.position);
         }
+
+        cameraSpeed = playerCamera.orthographicSize * 0.0175f;
     }
 
     private Vector3 ClampCamera(Vector3 targetPosition)

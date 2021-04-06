@@ -18,18 +18,6 @@ public class TurnOrder : MonoBehaviour
     private float initiativeText;
     private Sprite unitSprite;
 
-    private int tmp;
-
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
-    }
-
     public void AddUnitTurn()
     {
         turnPrefab = Resources.Load("UnitTurnPanel") as GameObject;
@@ -51,6 +39,20 @@ public class TurnOrder : MonoBehaviour
         }
     }
 
+    public void SortUnitTurn()
+    {
+        foreach (UnitGridCombat unit in gridCombatSystem.unitGridCombatArray)
+        {
+            for (int i = 0; i < gridCombatSystem.unitGridCombatArray.Length; i++)
+            {
+                if (gridCombatSystem.unitGridCombatArray[i].characterName == unit.characterName)
+                {
+                    contentObject.transform.Find("UnitTurnPanel " + unit.name).SetSiblingIndex(i);
+                }
+            }
+        }
+    }
+
     public void ActiveUnitTurn()
     {
         foreach (UnitGridCombat unit in gridCombatSystem.unitGridCombatArray)
@@ -60,11 +62,7 @@ public class TurnOrder : MonoBehaviour
                 // Make background color blue
                 contentObject.transform.Find("UnitTurnPanel " + unit.name).GetComponent<Image>().color = new Color32(100, 200, 255, 255);
             }
-            else if (unit == null)
-            {
-
-            }
-            else
+            else if (unit != null)
             {
                 // Make background color grey
                 contentObject.transform.Find("UnitTurnPanel " + unit.name).GetComponent<Image>().color = new Color32(225, 225, 225, 255);
