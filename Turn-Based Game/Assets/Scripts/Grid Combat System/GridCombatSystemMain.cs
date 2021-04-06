@@ -11,9 +11,11 @@ public class GridCombatSystemMain : MonoBehaviour {
     public UnitGridCombat[] playerUnitGridCombatArray;
     public UnitGridCombat[] enemyUnitGridCombatArray;
     public UnitGridCombat[] unitGridCombatArray;
+    private int arrayIndex;
 
-    private State state;
+    [Header ("Unit")]
     public UnitGridCombat unitGridCombat;
+    private State state;    
     private List<UnitGridCombat> blueTeamList;
     private List<UnitGridCombat> redTeamList;
     //private int blueTeamActiveUnitIndex;
@@ -21,9 +23,8 @@ public class GridCombatSystemMain : MonoBehaviour {
     private bool canMoveThisTurn;
     private bool canAttackThisTurn;
 
+    [Header ("UI")]
     public TurnOrder turnOrder;
-    private int arrayIndex;
-
     public GameObject[] playerUI;
 
     private enum State {
@@ -83,7 +84,7 @@ public class GridCombatSystemMain : MonoBehaviour {
         if (arrayIndex >= unitGridCombatArray.Length - 1)
         {
             arrayIndex = 0;
-            Debug.Log(arrayIndex);
+            Debug.Log("Unit index: " + arrayIndex);
         }
         else
         {
@@ -92,8 +93,13 @@ public class GridCombatSystemMain : MonoBehaviour {
                 if (unitGridCombatArray[i + 1] != null)
                 {
                     arrayIndex = i + 1;
-                    Debug.Log(arrayIndex);
+                    Debug.Log("Unit index: " + arrayIndex);
                     break;
+                }
+                else if (unitGridCombatArray[unitGridCombatArray.Length - 1] == null)
+                {
+                    arrayIndex = 0;
+                    Debug.Log("Unit index: " + arrayIndex);
                 }
             }
         }
