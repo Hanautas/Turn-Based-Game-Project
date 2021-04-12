@@ -83,8 +83,24 @@ public class GridCombatSystemMain : MonoBehaviour {
     {
         if (arrayIndex >= unitGridCombatArray.Length - 1)
         {
+            // If index is at end of array, reset index to 0
             arrayIndex = 0;
             Debug.Log("Unit index: " + arrayIndex);
+
+            if (unitGridCombatArray[0] == null)
+            {
+                for (int i = arrayIndex; i < unitGridCombatArray.Length - 1; i++)
+                {
+                    if (unitGridCombatArray[i + 1] != null)
+                    {
+                        // Get the next index in array
+                        // If next index is null, skip nulls until index is not null
+                        arrayIndex = i + 1;
+                        Debug.Log("Unit index: " + arrayIndex);
+                        break;
+                    }
+                }
+            }
         }
         else
         {
@@ -92,19 +108,38 @@ public class GridCombatSystemMain : MonoBehaviour {
             {
                 if (unitGridCombatArray[i + 1] != null)
                 {
+                    // Get the next index in array
+                    // If next index is null, skip nulls until index is not null
                     arrayIndex = i + 1;
                     Debug.Log("Unit index: " + arrayIndex);
                     break;
                 }
-                else if (unitGridCombatArray[unitGridCombatArray.Length - 1] == null)
+
+                if (arrayIndex >= unitGridCombatArray.Length - 1 - i && unitGridCombatArray[unitGridCombatArray.Length - 1] == null)
                 {
+                    // If index is at end of array and end of array is null, reset index to 0
                     arrayIndex = 0;
                     Debug.Log("Unit index: " + arrayIndex);
+
+                    if (unitGridCombatArray[0] == null)
+                    {
+                        for (int j = arrayIndex; j < unitGridCombatArray.Length - 1; j++)
+                        {
+                            if (unitGridCombatArray[j + 1] != null)
+                            {
+                                // Get the next index in array
+                                // If next index is null, skip nulls until index is not null
+                                arrayIndex = j + 1;
+                                Debug.Log("Unit index: " + arrayIndex);
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        // Assign the next unit in unit array to active unit
+        // Set the next unit in unit array to active unit
         unitGridCombat = unitGridCombatArray[arrayIndex];
 
         GameHandler_GridCombatSystem.Instance.SetCameraFollowPosition(unitGridCombat.GetPosition());
@@ -132,6 +167,7 @@ public class GridCombatSystemMain : MonoBehaviour {
         // Highlight current unit in turn order
         turnOrder.ActiveUnitTurn();
 
+        // Show UI for player units
         CurrentUnitUI();
     }
 
@@ -147,22 +183,6 @@ public class GridCombatSystemMain : MonoBehaviour {
             else
             {
                 obj.SetActive(true);
-            }
-        }
-
-        // Flash color on the current unit while idle
-        foreach (UnitGridCombat unit in unitGridCombatArray)
-        {
-            if (unit != null)
-            {
-                if (unit == unitGridCombat && unitGridCombat.GetState() == UnitGridCombat.State.Normal)
-                {
-                    unit.animator.SetBool("Active Unit", true);
-                }
-                else
-                {
-                    unit.animator.SetBool("Active Unit", false);
-                }
             }
         }
     }
@@ -320,6 +340,22 @@ public class GridCombatSystemMain : MonoBehaviour {
                 break;
             case State.Waiting:
                 break;
+        }
+
+        // Flash color on the current unit while idle
+        foreach (UnitGridCombat unit in unitGridCombatArray)
+        {
+            if (unit != null)
+            {
+                if (unit == unitGridCombat && unitGridCombat.GetState() == UnitGridCombat.State.Normal)
+                {
+                    unit.animator.SetBool("Active Unit", true);
+                }
+                else
+                {
+                    unit.animator.SetBool("Active Unit", false);
+                }
+            }
         }
 
         // Flip team blue unit icon with F key

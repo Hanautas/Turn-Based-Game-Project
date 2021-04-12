@@ -8,7 +8,7 @@ public class FPSCounter : MonoBehaviour
 {
  
     public float timer, refresh, avgFramerate;
-    string display = "FPS: {0}";
+    private string display = "FPS: {0}";
     private Text m_Text;
  
     private void Start()

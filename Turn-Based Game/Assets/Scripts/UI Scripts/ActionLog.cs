@@ -11,9 +11,12 @@ public class ActionLog : MonoBehaviour
     public ScrollRect scrollRect;
     private Vector2 scrollPosition = new Vector2(0, 0);
 
-    public GameObject textPrefab;
+    private GameObject textPrefab;
     private Image actionPanel;
     private Text actionText;
+
+    public AudioClip soundEffect;
+    public AudioSource audioSource;
 
     void Start()
     {
@@ -21,6 +24,7 @@ public class ActionLog : MonoBehaviour
         textPrefab = Resources.Load("ActionTextPanel") as GameObject;
 
         //InvokeRepeating("Advertisement", 0, 120);
+        Tips();
     }
 
     public void InstantiateTextLog()
@@ -32,27 +36,36 @@ public class ActionLog : MonoBehaviour
         actionText = textObject.transform.Find("Action Text").GetComponent<Text>();
 
         StartCoroutine(SetScrollValue());
+
+        audioSource.PlayOneShot(soundEffect, 1f);
     }
 
     public void OutputDamageLog(string currentUnit, string damageDealt, string targetUnit)
     {
         InstantiateTextLog();
         actionPanel.color = new Color32(100, 200, 255, 255);
-        actionText.text = currentUnit + " dealt " + damageDealt + " damage to " + targetUnit + "!";
+        actionText.text = "<b>" + currentUnit + "</b> dealt " + damageDealt + " damage to <b>" + targetUnit + "!</b>";
     }
 
     public void OutputHealLog(string currentUnit, int value)
     {
         InstantiateTextLog();
         actionPanel.color = new Color32(100, 255, 100, 255);
-        actionText.text = currentUnit + " healed for " + value.ToString() + " health!";
+        actionText.text = "<b>" + currentUnit + "</b> healed for " + value.ToString() + " health!";
     }
 
     public void OutputDeathLog(string currentUnit)
     {
         InstantiateTextLog();
         actionPanel.color = new Color32(255, 100, 100, 255);
-        actionText.text = currentUnit + " is down!";
+        actionText.text = "<b>" + currentUnit + "</b> is down!";
+    }
+
+    public void OutputCombatLine(string currentUnit, string combatLine)
+    {
+        InstantiateTextLog();
+        actionPanel.color = new Color32(225, 225, 225, 255);
+        actionText.text = "<b>" + currentUnit + ":</b> '" + combatLine + "'";
     }
 
     public IEnumerator SetScrollValue()
@@ -66,5 +79,12 @@ public class ActionLog : MonoBehaviour
         InstantiateTextLog();
         actionPanel.color = new Color32(225, 225, 225, 255);
         actionText.text = "This game is a work in progress.";
+    }
+
+    public void Tips()
+    {
+        InstantiateTextLog();
+        actionPanel.color = new Color32(225, 225, 225, 255);
+        actionText.text = "This is the action log.\nDamage, healing, deaths, etc. will be displayed here.";
     }
 }

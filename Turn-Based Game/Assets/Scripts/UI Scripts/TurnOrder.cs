@@ -8,7 +8,7 @@ public class TurnOrder : MonoBehaviour
     public GridCombatSystemMain gridCombatSystem;
 
     public Transform contentObject;
-    public GameObject turnPrefab;
+    private GameObject turnPrefab;
 
     private Text unitName;
     private Text unitInitiative;

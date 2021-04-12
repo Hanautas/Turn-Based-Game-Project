@@ -27,6 +27,8 @@ public class UnitGridCombat : MonoBehaviour {
 
     public Animator animator;
 
+    public bool killButton;
+
     [Header ("Stats")]
     public string characterName = "NAME";
     public int maxHealth;
@@ -43,6 +45,11 @@ public class UnitGridCombat : MonoBehaviour {
     public int intelligence;
     public int wisdom;
     public int charisma;
+
+    [Header ("Combat Lines")]
+    public string[] damageLines;
+    public string[] healLines;
+    public string[] deathLines;
 
     public enum Team {
         Blue,
@@ -70,6 +77,8 @@ public class UnitGridCombat : MonoBehaviour {
         deadPrefab = Resources.Load("Dead") as GameObject;
 
         animator = unitIcon.GetComponent<Animator>();
+
+        killButton = false;
     }
 
     private void Update()
@@ -97,6 +106,17 @@ public class UnitGridCombat : MonoBehaviour {
             }
 
             initiative = (int)currentNumber;
+        }
+
+        if (killButton == true)
+        {
+            Debug.Log(gameObject.name + " is dead.");
+            Destroy(gameObject);
+
+            unitTurnPanel = GameObject.Find("UnitTurnPanel " + name);
+            unitTurnPanel.SetActive(false);
+
+            SpawnDead();
         }
     }
 
@@ -151,6 +171,8 @@ public class UnitGridCombat : MonoBehaviour {
             unitTurnPanel.SetActive(false);
 
             SpawnDead();
+
+            ActionLog.instance.OutputCombatLine(this.characterName, deathLines[UnityEngine.Random.Range(0, deathLines.Length - 1)]);
         }
     }
 

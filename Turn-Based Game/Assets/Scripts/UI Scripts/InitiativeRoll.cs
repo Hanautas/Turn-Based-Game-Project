@@ -11,7 +11,9 @@ public class InitiativeRoll : MonoBehaviour
 
     public Transform contentObject;
     public GameObject waitText;
+    public GameObject rollText;
     public GameObject rollButton;
+    public GameObject closeButton;
     private GameObject initiativePrefab;
     private GameObject initiativeObject;
 
@@ -49,9 +51,11 @@ public class InitiativeRoll : MonoBehaviour
 
     public IEnumerator EndRoll()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(2);
 
         startRoll = false;
+        closeButton.SetActive(true);
+        rollText.SetActive(false);
     }
 
     public IEnumerator GetPlayerUnits()
@@ -59,6 +63,7 @@ public class InitiativeRoll : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
 
         waitText.SetActive(false);
+        rollText.SetActive(true);
         rollButton.SetActive(true);
         playerUnitArray = gridCombatSystem.playerUnitGridCombatArray;
         initiativePrefab = Resources.Load("initiativePanel") as GameObject;
