@@ -9,7 +9,9 @@ public class GridCombatSystemMain : MonoBehaviour {
     private GameObject[] playerObjectArray;
     private GameObject[] enemyObjectArray;
     public UnitGridCombat[] playerUnitGridCombatArray;
+    private int playerUnitCount;
     public UnitGridCombat[] enemyUnitGridCombatArray;
+    private int enemyUnitCount;
     public UnitGridCombat[] unitGridCombatArray;
     private int arrayIndex;
 
@@ -24,6 +26,11 @@ public class GridCombatSystemMain : MonoBehaviour {
     private bool canAttackThisTurn;
 
     [Header ("UI")]
+    public float logTimeRemaining;
+    public bool isLogTimer;
+    public GameObject blackBackground;
+    public GameObject gameOverWin;
+    public GameObject gameOverLost;
     public TurnOrder turnOrder;
     public GameObject[] playerUI;
 
@@ -77,6 +84,9 @@ public class GridCombatSystemMain : MonoBehaviour {
 
         canMoveThisTurn = true;
         canAttackThisTurn = true;
+
+        logTimeRemaining = 5f;
+        isLogTimer = false;
     }
 
     private void SelectNextActiveUnit()
@@ -151,6 +161,9 @@ public class GridCombatSystemMain : MonoBehaviour {
 
         // Show UI for player units
         CurrentUnitUI();
+
+        // Check game over
+        GameOver();
     }
 
     public void SortUnitArray()
@@ -169,6 +182,39 @@ public class GridCombatSystemMain : MonoBehaviour {
 
         // Show UI for player units
         CurrentUnitUI();
+    }
+
+    public void GameOver()
+    {
+        playerUnitCount = 0;
+        for (int i = 0; i < playerUnitGridCombatArray.Length; i++)
+        {
+            if (playerUnitGridCombatArray[i] != null)
+            {
+                playerUnitCount += 1;
+            }
+        }
+        if (playerUnitCount == 0)
+        {
+            gameOverLost.SetActive(true);
+            blackBackground.SetActive(true);
+            Debug.Log("Enemy wins.");
+        }
+
+        enemyUnitCount = 0;
+        for (int i = 0; i < enemyUnitGridCombatArray.Length; i++)
+        {
+            if (enemyUnitGridCombatArray[i] != null)
+            {
+                enemyUnitCount += 1;
+            }
+        }
+        if (enemyUnitCount == 0)
+        {
+            gameOverWin.SetActive(true);
+            blackBackground.SetActive(true);
+            Debug.Log("Player wins.");
+        }
     }
 
     public void CurrentUnitUI()
@@ -366,6 +412,20 @@ public class GridCombatSystemMain : MonoBehaviour {
         else if (Input.GetKeyDown(KeyCode.F) && unitGridCombat.team == UnitGridCombat.Team.Blue && unitGridCombat.unitIcon.transform.rotation.y != 0)
         {
             unitGridCombat.unitIcon.transform.Rotate(0, -180, 0);
+        }
+
+        // Combat line spam prevention timer
+        if (isLogTimer == true)
+        {
+            if (logTimeRemaining > 0)
+            {
+                logTimeRemaining -= Time.deltaTime;
+            }
+            else
+            {
+                logTimeRemaining = 0;
+                isLogTimer = false;
+            }
         }
     }
 

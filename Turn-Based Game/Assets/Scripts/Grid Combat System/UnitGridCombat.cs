@@ -172,7 +172,10 @@ public class UnitGridCombat : MonoBehaviour {
 
             SpawnDead();
 
-            ActionLog.instance.OutputCombatLine(this.characterName, deathLines[UnityEngine.Random.Range(0, deathLines.Length - 1)]);
+            if (deathLines.Length > 0)
+            {
+                ActionLog.instance.OutputCombatLine(this.characterName, deathLines[UnityEngine.Random.Range(0, deathLines.Length)]);
+            }
         }
     }
 
