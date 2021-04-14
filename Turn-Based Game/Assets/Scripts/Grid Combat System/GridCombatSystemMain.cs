@@ -127,10 +127,6 @@ public class GridCombatSystemMain : MonoBehaviour {
 
                 if (arrayIndex >= unitGridCombatArray.Length - 1 - i && unitGridCombatArray[unitGridCombatArray.Length - 1] == null)
                 {
-                    // If index is at end of array and end of array is null, reset index to 0
-                    arrayIndex = 0;
-                    Debug.Log("Unit index: " + arrayIndex);
-
                     if (unitGridCombatArray[0] == null)
                     {
                         for (int j = arrayIndex; j < unitGridCombatArray.Length - 1; j++)
@@ -144,6 +140,12 @@ public class GridCombatSystemMain : MonoBehaviour {
                                 break;
                             }
                         }
+                    }
+                    else
+                    {
+                        // If index is at end of array and end of array is null, reset index to 0
+                        arrayIndex = 0;
+                        Debug.Log("Unit index: " + arrayIndex);
                     }
                 }
             }
@@ -232,43 +234,6 @@ public class GridCombatSystemMain : MonoBehaviour {
             }
         }
     }
-
-    /*
-    private void SelectNextActiveUnit() {
-        if (unitGridCombat == null || unitGridCombat.GetTeam() == UnitGridCombat.Team.Red) {
-            unitGridCombat = GetNextActiveUnit(UnitGridCombat.Team.Blue);
-        } else {
-            unitGridCombat = GetNextActiveUnit(UnitGridCombat.Team.Red);
-        }
-
-        GameHandler_GridCombatSystem.Instance.SetCameraFollowPosition(unitGridCombat.GetPosition());
-        canMoveThisTurn = true;
-        canAttackThisTurn = true;
-
-        // Highlight the next active unit in the turn order
-        turnOrder.GetComponent<TurnOrder>().ActiveUnitTurn();
-    }
-
-    private UnitGridCombat GetNextActiveUnit(UnitGridCombat.Team team) {
-        if (team == UnitGridCombat.Team.Blue) {
-            blueTeamActiveUnitIndex = (blueTeamActiveUnitIndex + 1) % blueTeamList.Count;
-            if (blueTeamList[blueTeamActiveUnitIndex] == null || blueTeamList[blueTeamActiveUnitIndex].IsDead()) {
-                // Unit is Dead, get next one
-                return GetNextActiveUnit(team);
-            } else {
-                return blueTeamList[blueTeamActiveUnitIndex];
-            }
-        } else {
-            redTeamActiveUnitIndex = (redTeamActiveUnitIndex + 1) % redTeamList.Count;
-            if (redTeamList[redTeamActiveUnitIndex] == null || redTeamList[redTeamActiveUnitIndex].IsDead()) {
-                // Unit is Dead, get next one
-                return GetNextActiveUnit(team);
-            } else {
-                return redTeamList[redTeamActiveUnitIndex];
-            }
-        }
-    }
-    */
 
     private void UpdateValidMovePositions() {
         GridSystem<GridObject> grid = GameHandler_GridCombatSystem.Instance.GetGrid();

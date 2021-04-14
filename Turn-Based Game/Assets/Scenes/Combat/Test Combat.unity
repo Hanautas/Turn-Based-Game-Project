@@ -259,7 +259,7 @@ MonoBehaviour:
   unitTurnPanel: {fileID: 0}
   animator: {fileID: 0}
   killButton: 0
-  characterName: Pink
+  characterName: Beidou
   maxHealth: 45
   currentHealth: 0
   damage: 0
@@ -818,7 +818,7 @@ MonoBehaviour:
   unitTurnPanel: {fileID: 0}
   animator: {fileID: 0}
   killButton: 0
-  characterName: Orange
+  characterName: Ganyu
   maxHealth: 35
   currentHealth: 0
   damage: 0
@@ -1577,7 +1577,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e057b820dc553064fb60bc2be69b9351, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 931e31a5a695c9b4fb81ae6a99300596, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2294,7 +2294,7 @@ MonoBehaviour:
   unitTurnPanel: {fileID: 0}
   animator: {fileID: 0}
   killButton: 0
-  characterName: Purple
+  characterName: Lisa
   maxHealth: 35
   currentHealth: 0
   damage: 0
@@ -7338,7 +7338,7 @@ MonoBehaviour:
   unitTurnPanel: {fileID: 0}
   animator: {fileID: 0}
   killButton: 0
-  characterName: Green
+  characterName: Mona
   maxHealth: 25
   currentHealth: 0
   damage: 0
@@ -7579,13 +7579,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 0e57c9a3ffedde54592693a503569913, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -7713,8 +7713,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 0, y: 75}
+  m_SizeDelta: {x: 400, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &691358432
 MonoBehaviour:
@@ -7747,7 +7747,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 'Level:'
 --- !u!222 &691358433
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7827,7 +7827,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 5f1e9cce637d66244856ab1414b15c82, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a446e35e62c8a2c46829938d0bb9da16, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -8100,7 +8100,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 41023e4ecd0519349a8aa2a7fc26e101, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 364d30df245dc784197f30f7a9d2b4b7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -8395,7 +8395,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d9c7b4143638c9e4f9a261aad690e63f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3f231151cfbcb9a468e9f3792643111d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -8697,7 +8697,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &808024223
 MonoBehaviour:
@@ -8712,13 +8712,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0.78431374, b: 0.78431374, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 0e57c9a3ffedde54592693a503569913, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -9487,7 +9487,7 @@ MonoBehaviour:
   unitTurnPanel: {fileID: 0}
   animator: {fileID: 0}
   killButton: 0
-  characterName: Yellow
+  characterName: Qiqi
   maxHealth: 30
   currentHealth: 0
   damage: 0
@@ -11015,7 +11015,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b08e7e8305b262f439547b7f3708cbf7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 02af60ad84a8ac74ebd37f71e673cf96, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -23425,7 +23425,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 4f05ab0cf60f33649b23eeebb67c1cf1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: aed5fe4f295a4e7439017193d6f406fa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -23572,7 +23572,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1373714231}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -24961,7 +24961,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d139447e2505e0043abbc457750b664f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6cf1774f83d1f4f4a9ffb922d888fe1a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -25816,7 +25816,7 @@ MonoBehaviour:
   unitTurnPanel: {fileID: 0}
   animator: {fileID: 0}
   killButton: 0
-  characterName: Cyan
+  characterName: Tartaglia
   maxHealth: 30
   currentHealth: 0
   damage: 0
@@ -25908,8 +25908,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 20}
+  m_AnchoredPosition: {x: 0, y: 50}
+  m_SizeDelta: {x: 400, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1632687351
 MonoBehaviour:
@@ -26435,7 +26435,7 @@ MonoBehaviour:
   unitTurnPanel: {fileID: 0}
   animator: {fileID: 0}
   killButton: 0
-  characterName: Red
+  characterName: Keqing
   maxHealth: 20
   currentHealth: 0
   damage: 0
@@ -27102,7 +27102,7 @@ MonoBehaviour:
   unitTurnPanel: {fileID: 0}
   animator: {fileID: 0}
   killButton: 0
-  characterName: Blue
+  characterName: Amber
   maxHealth: 20
   currentHealth: 0
   damage: 0
@@ -27116,9 +27116,9 @@ MonoBehaviour:
   wisdom: 0
   charisma: 0
   damageLines:
-  - 
-  - 
-  - 
+  - I could use some help
+  - That hurt
+  - Cant take much more
   healLines:
   - Much better
   - Healed
@@ -28753,8 +28753,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -5, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2022908067
 GameObject:
@@ -29326,7 +29326,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 08f079808c54b8f4294d0074686b60ab, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 30e57dd12c08d214a8eb0528173178a0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

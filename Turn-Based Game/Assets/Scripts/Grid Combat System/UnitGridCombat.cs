@@ -162,6 +162,14 @@ public class UnitGridCombat : MonoBehaviour {
         healthSystem.Damage(damageAmount);
         ActionLog.instance.OutputDamageLog(unitGridCombat.characterName, damageAmount.ToString(), this.characterName);
 
+        if (healthSystem.GetHealth() <= healthSystem.GetHealthMax() * 0.2 && healthSystem.GetHealth() > 0)
+        {
+            if (damageLines.Length > 0)
+            {
+                ActionLog.instance.OutputCombatLine(this.characterName, damageLines[UnityEngine.Random.Range(0, damageLines.Length)]);
+            }
+        }
+
         if (healthSystem.IsDead())
         {
             Debug.Log(gameObject.name + " is dead.");

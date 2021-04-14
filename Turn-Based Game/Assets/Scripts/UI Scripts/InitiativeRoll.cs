@@ -51,7 +51,7 @@ public class InitiativeRoll : MonoBehaviour
 
     public IEnumerator EndRoll()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1.5f);
 
         startRoll = false;
         closeButton.SetActive(true);
