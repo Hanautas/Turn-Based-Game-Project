@@ -20,12 +20,12 @@ public class UnitGridCombat : MonoBehaviour {
     private SpriteRenderer unitSprite;
     private GameObject deadPrefab;
 
-    public float desiredNumber;
-    private float currentNumber;
-
-    public GameObject unitTurnPanel;
+    private GameObject unitTurnPanel;
 
     public Animator animator;
+
+    public float desiredNumber;
+    private float currentNumber;
 
     public bool killButton;
 
