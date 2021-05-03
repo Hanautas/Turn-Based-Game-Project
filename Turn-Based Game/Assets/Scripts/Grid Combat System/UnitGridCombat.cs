@@ -123,7 +123,7 @@ public class UnitGridCombat : MonoBehaviour {
     public void SetInitiative()
     {
         currentNumber = 0;
-        desiredNumber = UnityEngine.Random.Range(1, 20);
+        desiredNumber = initiative + UnityEngine.Random.Range(1, 20);
     }
 
     public void MoveTo(Vector3 targetPosition, Action onReachedPosition)
@@ -161,6 +161,36 @@ public class UnitGridCombat : MonoBehaviour {
     {
         healthSystem.Damage(damageAmount);
         ActionLog.instance.OutputDamageLog(unitGridCombat.characterName, damageAmount.ToString(), this.characterName);
+
+        if (healthSystem.GetHealth() <= healthSystem.GetHealthMax() * 0.2 && healthSystem.GetHealth() > 0)
+        {
+            if (damageLines.Length > 0)
+            {
+                ActionLog.instance.OutputCombatLine(this.characterName, damageLines[UnityEngine.Random.Range(0, damageLines.Length)]);
+            }
+        }
+
+        if (healthSystem.IsDead())
+        {
+            Debug.Log(gameObject.name + " is dead.");
+            Destroy(gameObject);
+
+            unitTurnPanel = GameObject.Find("UnitTurnPanel " + name);
+            unitTurnPanel.SetActive(false);
+
+            SpawnDead();
+
+            if (deathLines.Length > 0)
+            {
+                ActionLog.instance.OutputCombatLine(this.characterName, deathLines[UnityEngine.Random.Range(0, deathLines.Length)]);
+            }
+        }
+    }
+
+    public void AbilityDamage(int damageAmount, string abilityName)
+    {
+        healthSystem.Damage(damageAmount);
+        ActionLog.instance.OutputDamageLog(abilityName, damageAmount.ToString(), this.characterName);
 
         if (healthSystem.GetHealth() <= healthSystem.GetHealthMax() * 0.2 && healthSystem.GetHealth() > 0)
         {

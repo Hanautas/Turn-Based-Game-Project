@@ -9,6 +9,9 @@ public class CameraMovement : MonoBehaviour
     public SpriteRenderer mapRenderer;
     private Vector3 dragOrigin;
 
+    public GameObject playerUI;
+    public GameObject tilemapVisual;
+
     private float cameraSpeed;
 
     private float zoomStep;
@@ -19,7 +22,6 @@ public class CameraMovement : MonoBehaviour
     private float mapMinY;
     private float mapMaxX;
     private float mapMaxY;
-
 
     void Start()
     {
@@ -39,6 +41,21 @@ public class CameraMovement : MonoBehaviour
         MoveCamera();
         PanCamera();
         WheelZoom();
+
+        // Hide player UI with F5
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            if (playerUI.activeSelf == false)
+            {
+                playerUI.SetActive(true);
+                tilemapVisual.SetActive(true);
+            }
+            else
+            {
+                playerUI.SetActive(false);
+                tilemapVisual.SetActive(false);
+            }
+        }
     }
 
     private void MoveCamera()

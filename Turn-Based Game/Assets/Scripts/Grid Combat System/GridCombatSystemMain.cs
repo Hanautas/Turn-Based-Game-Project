@@ -26,6 +26,7 @@ public class GridCombatSystemMain : MonoBehaviour {
     private bool canAttackThisTurn;
 
     [Header ("UI")]
+    public int turnCount;
     public float logTimeRemaining;
     public bool isLogTimer;
     public GameObject blackBackground;
@@ -85,6 +86,7 @@ public class GridCombatSystemMain : MonoBehaviour {
         canMoveThisTurn = true;
         canAttackThisTurn = true;
 
+        turnCount = 1;
         logTimeRemaining = 5f;
         isLogTimer = false;
     }
@@ -157,6 +159,8 @@ public class GridCombatSystemMain : MonoBehaviour {
         GameHandler_GridCombatSystem.Instance.SetCameraFollowPosition(unitGridCombat.GetPosition());
         canMoveThisTurn = true;
         canAttackThisTurn = true;
+
+        turnCount += 1;
 
         // Highlight the next active unit in the turn order
         turnOrder.ActiveUnitTurn();
