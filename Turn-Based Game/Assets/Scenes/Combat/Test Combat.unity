@@ -181,7 +181,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   desiredNumber: 0
   killButton: 0
-  characterName: Beidou
+  characterName: Pink
   maxHealth: 45
   currentHealth: 0
   damage: 0
@@ -739,7 +739,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   desiredNumber: 0
   killButton: 0
-  characterName: Ganyu
+  characterName: Green
   maxHealth: 35
   currentHealth: 0
   damage: 0
@@ -1411,7 +1411,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 931e31a5a695c9b4fb81ae6a99300596, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e057b820dc553064fb60bc2be69b9351, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1871,7 +1871,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   desiredNumber: 0
   killButton: 0
-  characterName: Lisa
+  characterName: Red
   maxHealth: 35
   currentHealth: 0
   damage: 0
@@ -6376,7 +6376,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   desiredNumber: 0
   killButton: 0
-  characterName: Mona
+  characterName: Purple
   maxHealth: 25
   currentHealth: 0
   damage: 0
@@ -6865,7 +6865,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a446e35e62c8a2c46829938d0bb9da16, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5f1e9cce637d66244856ab1414b15c82, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -7138,7 +7138,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 364d30df245dc784197f30f7a9d2b4b7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d139447e2505e0043abbc457750b664f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -7424,7 +7424,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 3f231151cfbcb9a468e9f3792643111d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b08e7e8305b262f439547b7f3708cbf7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -8235,7 +8235,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   desiredNumber: 0
   killButton: 0
-  characterName: Qiqi
+  characterName: Orange
   maxHealth: 30
   currentHealth: 0
   damage: 0
@@ -8943,6 +8943,28 @@ MonoBehaviour:
   enemyUnitGridCombatArray: []
   unitGridCombatArray: []
   unitGridCombat: {fileID: 0}
+  aIMoveVector: {x: 0, y: 0}
+  maxMoveDistance: 0
+  closestPlayer: {fileID: 0}
+  offsets:
+  - {x: 1, y: 0, z: 0}
+  - {x: 1, y: 1, z: 0}
+  - {x: 0, y: 1, z: 0}
+  - {x: -1, y: 0, z: 0}
+  - {x: -1, y: -1, z: 0}
+  - {x: 0, y: -1, z: 0}
+  - {x: 1, y: -1, z: 0}
+  - {x: -1, y: 1, z: 0}
+  offsetPositions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  closestPosition: {x: 0, y: 0, z: 0}
   turnCount: 0
   logTimeRemaining: 0
   isLogTimer: 0
@@ -9515,7 +9537,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 02af60ad84a8ac74ebd37f71e673cf96, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4f05ab0cf60f33649b23eeebb67c1cf1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -21828,7 +21850,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: aed5fe4f295a4e7439017193d6f406fa, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 41023e4ecd0519349a8aa2a7fc26e101, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -23287,7 +23309,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 6cf1774f83d1f4f4a9ffb922d888fe1a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 08f079808c54b8f4294d0074686b60ab, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -23850,7 +23872,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   desiredNumber: 0
   killButton: 0
-  characterName: Tartaglia
+  characterName: Yellow
   maxHealth: 30
   currentHealth: 0
   damage: 0
@@ -24318,7 +24340,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   desiredNumber: 0
   killButton: 0
-  characterName: Keqing
+  characterName: Cyan
   maxHealth: 20
   currentHealth: 0
   damage: 0
@@ -25095,12 +25117,12 @@ MonoBehaviour:
   animator: {fileID: 0}
   desiredNumber: 0
   killButton: 0
-  characterName: Amber
+  characterName: Blue
   maxHealth: 20
   currentHealth: 0
   damage: 0
   armorClass: 0
-  initiative: 2
+  initiative: 20
   moveSpeed: 30
   strength: 0
   dexterity: 0
@@ -26661,7 +26683,7 @@ SpriteRenderer:
   m_SortingLayerID: -1066275681
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 30e57dd12c08d214a8eb0528173178a0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d9c7b4143638c9e4f9a261aad690e63f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
