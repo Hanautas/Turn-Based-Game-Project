@@ -15,6 +15,10 @@ public class GridCombatSystemMain : MonoBehaviour {
     public UnitGridCombat[] unitGridCombatArray;
     private int arrayIndex;
 
+    [Header ("Gameplay")]
+    public bool isAttacking;
+    public bool isMoving;
+
     [Header ("Unit")]
     public UnitGridCombat unitGridCombat;
     private State state;    
@@ -23,6 +27,7 @@ public class GridCombatSystemMain : MonoBehaviour {
     private bool canMoveThisTurn;
     private bool canAttackThisTurn;
 
+    public Vector2 aIPathVector;
     public Vector2 aIMoveVector;
 
     public int maxMoveDistance;
@@ -96,6 +101,28 @@ public class GridCombatSystemMain : MonoBehaviour {
         turnCount = 1;
         logTimeRemaining = 5f;
         isLogTimer = false;
+    }
+
+    public void IsAttacking()
+    {
+        isAttacking = true;
+        UpdateValidMovePositions();
+
+        if (isMoving)
+        {
+            isMoving = false;
+        }
+    }
+
+    public void IsMoving()
+    {
+        isMoving = true;
+        UpdateValidMovePositions();
+
+        if (isAttacking)
+        {
+            isAttacking = false;
+        }
     }
 
     private void SelectNextActiveUnit()
@@ -188,7 +215,7 @@ public class GridCombatSystemMain : MonoBehaviour {
         GameHandler_GridCombatSystem.Instance.SetCameraFollowPosition(unitGridCombat.GetPosition());
 
         //SelectNextActiveUnit();
-        UpdateValidMovePositions();
+        ////////////UpdateValidMovePositions();
 
         // Highlight current unit in turn order
         turnOrder.ActiveUnitTurn();
@@ -298,65 +325,81 @@ public class GridCombatSystemMain : MonoBehaviour {
     private void Update() {
         switch (state) {
             case State.Normal:
-                if (unitGridCombat != null && Input.GetMouseButtonDown(0) && unitGridCombat.GetTeam() == UnitGridCombat.Team.Blue && UtilitiesClass.IsPointerOverUIObject() == false) {
+                if (unitGridCombat != null && Input.GetMouseButtonDown(0) && unitGridCombat.GetTeam() == UnitGridCombat.Team.Blue) {
                     GridSystem<GridObject> grid = GameHandler_GridCombatSystem.Instance.GetGrid();
                     GridObject gridObject = grid.GetGridObject(UtilitiesClass.GetMouseWorldPosition());
 
-                    // Check if clicking on a unit position
-                    if (gridObject.GetUnitGridCombat() != null) {
-                        // Clicked on top of a Unit
-                        if (unitGridCombat.IsEnemy(gridObject.GetUnitGridCombat())) {
-                            // Clicked on an Enemy of the current unit
-                            if (unitGridCombat.CanAttackUnit(gridObject.GetUnitGridCombat())) {
-                                // Can Attack Enemy
-                                if (canAttackThisTurn) {
-                                    canAttackThisTurn = false;
-                                    // Attack Enemy
+                    if (isAttacking && canAttackThisTurn)
+                    {
+                        if (Input.GetMouseButtonDown(0) && UtilitiesClass.IsPointerOverUIObject() == false)
+                        {
+                            // Check if clicking on a unit position
+                            if (gridObject.GetUnitGridCombat() != null) {
+                                // Clicked on top of a Unit
+                                if (unitGridCombat.IsEnemy(gridObject.GetUnitGridCombat())) {
+                                    // Clicked on an Enemy of the current unit
+                                    if (unitGridCombat.CanAttackUnit(gridObject.GetUnitGridCombat())) {
+                                        // Can Attack Enemy
+                                        if (canAttackThisTurn) {
+                                            canAttackThisTurn = false;
+                                            // Attack Enemy
+                                            state = State.Waiting;
+                                            unitGridCombat.AttackUnit(gridObject.GetUnitGridCombat(), () => {
+                                                state = State.Normal;
+                                                TurnOver();
+                                            });
+                                        }
+                                    } else {
+                                        // Cannot attack enemy
+                                    }
+                                    break;
+                                } else {
+                                    // Not an enemy
+                                }
+                            } else {
+                                // No unit here
+                            }
+
+                            isAttacking = false;
+                        }
+                    }
+
+                    if (isMoving && canMoveThisTurn)
+                    {
+                        if (Input.GetMouseButtonDown(0) && UtilitiesClass.IsPointerOverUIObject() == false)
+                        {
+                            if (gridObject.GetIsValidMovePosition()) {
+                                // Valid Move Position
+
+                                if (canMoveThisTurn) {
+                                    canMoveThisTurn = false;
+
                                     state = State.Waiting;
-                                    unitGridCombat.AttackUnit(gridObject.GetUnitGridCombat(), () => {
+
+                                    // Set entire Tilemap to Invisible
+                                    GameHandler_GridCombatSystem.Instance.GetMovementTilemap().SetAllTilemapSprite(
+                                        MovementTilemap.TilemapObject.TilemapSprite.None
+                                    );
+
+                                    // Remove Unit from current Grid Object
+                                    grid.GetGridObject(unitGridCombat.GetPosition()).ClearUnitGridCombat();
+                                    // Set Unit on target Grid Object
+                                    gridObject.SetUnitGridCombat(unitGridCombat);
+
+                                    unitGridCombat.MoveTo(UtilitiesClass.GetMouseWorldPosition(), () => {
                                         state = State.Normal;
+                                        UpdateValidMovePositions();
                                         TurnOver();
                                     });
                                 }
-                            } else {
-                                // Cannot attack enemy
                             }
-                            break;
-                        } else {
-                            // Not an enemy
-                        }
-                    } else {
-                        // No unit here
-                    }
 
-                    if (gridObject.GetIsValidMovePosition()) {
-                        // Valid Move Position
-
-                        if (canMoveThisTurn) {
-                            canMoveThisTurn = false;
-
-                            state = State.Waiting;
-
-                            // Set entire Tilemap to Invisible
-                            GameHandler_GridCombatSystem.Instance.GetMovementTilemap().SetAllTilemapSprite(
-                                MovementTilemap.TilemapObject.TilemapSprite.None
-                            );
-
-                            // Remove Unit from current Grid Object
-                            grid.GetGridObject(unitGridCombat.GetPosition()).ClearUnitGridCombat();
-                            // Set Unit on target Grid Object
-                            gridObject.SetUnitGridCombat(unitGridCombat);
-
-                            unitGridCombat.MoveTo(UtilitiesClass.GetMouseWorldPosition(), () => {
-                                state = State.Normal;
-                                UpdateValidMovePositions();
-                                TurnOver();
-                            });
+                            isMoving = false;
                         }
                     }
                 }
-                // AI move action
-                else if (unitGridCombat != null && unitGridCombat.GetTeam() == UnitGridCombat.Team.Red)
+                // Current unit is not a player, AI move action
+                if (unitGridCombat != null && unitGridCombat.GetTeam() == UnitGridCombat.Team.Red)
                 {
                     if (canMoveThisTurn || canAttackThisTurn)
                     {
@@ -379,7 +422,8 @@ public class GridCombatSystemMain : MonoBehaviour {
                                     state = State.Waiting;
                                     unitGridCombat.AttackUnit(gridObject.GetUnitGridCombat(), () => {
                                         state = State.Normal;
-                                        TurnOver();
+                                        EnemyTurnOver();
+                                        StartCoroutine(EnemyTurnOver());
                                     });
                                 }
                             } else {
@@ -414,7 +458,8 @@ public class GridCombatSystemMain : MonoBehaviour {
                             unitGridCombat.MoveTo(aIMoveVector, () => {
                                 state = State.Normal;
                                 UpdateValidMovePositions();
-                                TurnOver();
+                                //EnemyTurnOver();
+                                StartCoroutine(EnemyTurnOver());
                             });
                         }
                     }
@@ -492,23 +537,31 @@ public class GridCombatSystemMain : MonoBehaviour {
             if (distance > maxMoveDistance && distance != maxMoveDistance)
             {
                 // Outside of maximum move distance, move closer to player
-                Debug.Log("Target too far away");
+                aIPathVector = new Vector2(closestPosition.x, closestPosition.y);
+                Debug.Log("Distance: " + distance + ", target too far away");
             }
-            else if (distance <= maxMoveDistance && distance > 1.5f)
+            else if (distance <= maxMoveDistance && distance > 2.5f)
             {
                 // Inside maximum move distance, move next to player
                 FindClosestPosition();
                 aIMoveVector = new Vector2(closestPosition.x, closestPosition.y);
+                Debug.Log("Distance: " + distance + ", move closer to target");
             }
-            else if (distance < 1.5f)
+            else if (distance < 2.5f)
             {
                 // Next to player, attack player
                 aIMoveVector = new Vector2(closestPlayer.transform.position.x, closestPlayer.transform.position.y);
+                Debug.Log("Distance: " + distance + ", attack target");
             }
+        }
+        else
+        {
+            aIMoveVector = unitGridCombat.transform.position;
+            Debug.Log("No targets");
         }
     }
 
-    // !!! Check if valid move position !!!
+    // Check if valid move position
     void FindClosestPosition()
     {
         float distanceToClosestPosition = Mathf.Infinity;
@@ -529,9 +582,28 @@ public class GridCombatSystemMain : MonoBehaviour {
         }
     }
 
-    private void TurnOver() {
-        if (!canMoveThisTurn && !canAttackThisTurn) {
+    private void TurnOver()
+    {
+        if (!canMoveThisTurn && !canAttackThisTurn)
+        {
             // Cannot move or attack, turn over
+            ForceTurnOver();
+        }
+    }
+
+    private IEnumerator EnemyTurnOver()
+    {
+        if (!canMoveThisTurn && !canAttackThisTurn)
+        {
+            // Cannot move or attack, turn over
+            yield return new WaitForSeconds(2f);
+            ForceTurnOver();
+        }
+        
+        if (canMoveThisTurn && !canAttackThisTurn)
+        {
+            // Cannot move or attack, turn over
+            yield return new WaitForSeconds(2f);
             ForceTurnOver();
         }
     }
