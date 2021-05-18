@@ -106,7 +106,7 @@ public class GridCombatSystemMain : MonoBehaviour {
     public void IsAttacking()
     {
         isAttacking = true;
-        UpdateValidMovePositions();
+        UpdateValidMovePositions(true);
 
         if (isMoving)
         {
@@ -117,7 +117,7 @@ public class GridCombatSystemMain : MonoBehaviour {
     public void IsMoving()
     {
         isMoving = true;
-        UpdateValidMovePositions();
+        UpdateValidMovePositions(false);
 
         if (isAttacking)
         {
@@ -215,7 +215,7 @@ public class GridCombatSystemMain : MonoBehaviour {
         GameHandler_GridCombatSystem.Instance.SetCameraFollowPosition(unitGridCombat.GetPosition());
 
         //SelectNextActiveUnit();
-        ////////////UpdateValidMovePositions();
+        //UpdateValidMovePositions();
 
         // Highlight current unit in turn order
         turnOrder.ActiveUnitTurn();
@@ -273,7 +273,7 @@ public class GridCombatSystemMain : MonoBehaviour {
         }
     }
 
-    private void UpdateValidMovePositions() {
+    private void UpdateValidMovePositions(bool attacking) {
         GridSystem<GridObject> grid = GameHandler_GridCombatSystem.Instance.GetGrid();
         GridPathfinding gridPathfinding = GameHandler_GridCombatSystem.Instance.gridPathfinding;
 
@@ -293,7 +293,15 @@ public class GridCombatSystemMain : MonoBehaviour {
         }
 
         //int maxMoveDistance = 5;
-        maxMoveDistance = (unitGridCombat.moveSpeed + 5) / 5;
+        if (attacking)
+        {
+            maxMoveDistance = unitGridCombat.attackRange + 1;
+        }
+        else
+        {
+            maxMoveDistance = (unitGridCombat.moveSpeed + 5) / 5;
+        }
+        
         for (int x = unitX - maxMoveDistance; x <= unitX + maxMoveDistance; x++) {
             for (int y = unitY - maxMoveDistance; y <= unitY + maxMoveDistance; y++) {
                 if (gridPathfinding.IsWalkable(x, y)) {
@@ -388,7 +396,7 @@ public class GridCombatSystemMain : MonoBehaviour {
 
                                     unitGridCombat.MoveTo(UtilitiesClass.GetMouseWorldPosition(), () => {
                                         state = State.Normal;
-                                        UpdateValidMovePositions();
+                                        UpdateValidMovePositions(false);
                                         TurnOver();
                                     });
                                 }
@@ -457,7 +465,7 @@ public class GridCombatSystemMain : MonoBehaviour {
 
                             unitGridCombat.MoveTo(aIMoveVector, () => {
                                 state = State.Normal;
-                                UpdateValidMovePositions();
+                                UpdateValidMovePositions(false);
                                 //EnemyTurnOver();
                                 StartCoroutine(EnemyTurnOver());
                             });
@@ -557,11 +565,11 @@ public class GridCombatSystemMain : MonoBehaviour {
         else
         {
             aIMoveVector = unitGridCombat.transform.position;
-            Debug.Log("No targets");
+            Debug.Log("No targets, moving to position " + aIMoveVector);
         }
     }
 
-    // Check if valid move position
+    // Find closest valid move position
     void FindClosestPosition()
     {
         float distanceToClosestPosition = Mathf.Infinity;
@@ -574,10 +582,17 @@ public class GridCombatSystemMain : MonoBehaviour {
         foreach (Vector3 offsetPosition in offsetPositions)
         {
             float distanceToPosition = (offsetPosition - unitGridCombat.transform.position).sqrMagnitude;
-            if (distanceToPosition < distanceToClosestPosition)
+
+            GridSystem<GridObject> grid = GameHandler_GridCombatSystem.Instance.GetGrid();
+            GridObject gridObject = grid.GetGridObject(offsetPosition);
+
+            if (gridObject.GetIsValidMovePosition())
             {
-                distanceToClosestPosition = distanceToPosition;
-                closestPosition = offsetPosition;
+                if (distanceToPosition < distanceToClosestPosition)
+                {
+                    distanceToClosestPosition = distanceToPosition;
+                    closestPosition = offsetPosition;
+                }
             }
         }
     }
@@ -610,7 +625,7 @@ public class GridCombatSystemMain : MonoBehaviour {
 
     public void ForceTurnOver() {
         SelectNextActiveUnit();
-        UpdateValidMovePositions();
+        UpdateValidMovePositions(false);
     }
 
     public class GridObject {

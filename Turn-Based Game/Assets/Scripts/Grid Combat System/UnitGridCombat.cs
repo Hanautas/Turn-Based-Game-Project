@@ -34,6 +34,7 @@ public class UnitGridCombat : MonoBehaviour {
     public int maxHealth;
     public int currentHealth;
     public int damage;
+    public int attackRange;
     public int armorClass;
     public int initiative;
     public int moveSpeed = 30;
