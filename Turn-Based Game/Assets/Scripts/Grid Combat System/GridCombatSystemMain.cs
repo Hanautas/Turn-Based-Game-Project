@@ -5,6 +5,8 @@ using GridCombatSystem.Utilities;
 using GridPathfindingSystem;
 using System.Linq;
 
+using UnityEngine.UI;
+
 public class GridCombatSystemMain : MonoBehaviour {
     private GameObject[] playerObjectArray;
     private GameObject[] enemyObjectArray;
@@ -41,6 +43,9 @@ public class GridCombatSystemMain : MonoBehaviour {
     public int turnCount;
     public float logTimeRemaining;
     public bool isLogTimer;
+
+    public Image[] actionButtons;
+
     public GameObject blackBackground;
     public GameObject gameOverWin;
     public GameObject gameOverLost;
@@ -125,6 +130,21 @@ public class GridCombatSystemMain : MonoBehaviour {
         }
     }
 
+    public void ActiveButtonHighlight(Image buttonImage)
+    {
+        for (int i = 0; i < actionButtons.Length; i++)
+        {
+            if (actionButtons[i] == buttonImage)
+            {
+                buttonImage.color = new Color32(100, 200, 255, 255);
+            }
+            else
+            {
+                actionButtons[i].color = new Color32(255, 255, 255, 255);
+            }
+        }
+    }
+
     private void SelectNextActiveUnit()
     {
         if (arrayIndex >= unitGridCombatArray.Length - 1)
@@ -204,6 +224,12 @@ public class GridCombatSystemMain : MonoBehaviour {
 
         // Check game over
         GameOver();
+
+        // Action buttons default color
+        for (int i = 0; i < actionButtons.Length; i++)
+        {
+            actionButtons[i].color = new Color32(255, 255, 255, 255);
+        }
     }
 
     public void SortUnitArray()
@@ -341,31 +367,34 @@ public class GridCombatSystemMain : MonoBehaviour {
                     {
                         if (Input.GetMouseButtonDown(0) && UtilitiesClass.IsPointerOverUIObject() == false)
                         {
-                            // Check if clicking on a unit position
-                            if (gridObject.GetUnitGridCombat() != null) {
-                                // Clicked on top of a Unit
-                                if (unitGridCombat.IsEnemy(gridObject.GetUnitGridCombat())) {
-                                    // Clicked on an Enemy of the current unit
-                                    if (unitGridCombat.CanAttackUnit(gridObject.GetUnitGridCombat())) {
-                                        // Can Attack Enemy
-                                        if (canAttackThisTurn) {
-                                            canAttackThisTurn = false;
-                                            // Attack Enemy
-                                            state = State.Waiting;
-                                            unitGridCombat.AttackUnit(gridObject.GetUnitGridCombat(), () => {
-                                                state = State.Normal;
-                                                TurnOver();
-                                            });
+                            if (gridObject.GetIsValidMovePosition()) {
+                                // Valid Move Position
+                                // Check if clicking on a unit position
+                                if (gridObject.GetUnitGridCombat() != null) {
+                                    // Clicked on top of a Unit
+                                    if (unitGridCombat.IsEnemy(gridObject.GetUnitGridCombat())) {
+                                        // Clicked on an Enemy of the current unit
+                                        if (unitGridCombat.CanAttackUnit(gridObject.GetUnitGridCombat())) {
+                                            // Can Attack Enemy
+                                            if (canAttackThisTurn) {
+                                                canAttackThisTurn = false;
+                                                // Attack Enemy
+                                                state = State.Waiting;
+                                                unitGridCombat.AttackUnit(gridObject.GetUnitGridCombat(), () => {
+                                                    state = State.Normal;
+                                                    TurnOver();
+                                                });
+                                            }
+                                        } else {
+                                            // Cannot attack enemy
                                         }
+                                        break;
                                     } else {
-                                        // Cannot attack enemy
+                                        // Not an enemy
                                     }
-                                    break;
                                 } else {
-                                    // Not an enemy
+                                    // No unit here
                                 }
-                            } else {
-                                // No unit here
                             }
 
                             isAttacking = false;

@@ -10,23 +10,23 @@ public class MainMenu : MonoBehaviour
 
     public Animator transition;
     public float transitionTime = 1f;
-    public string sceneToLoad;
+    public string newGameScene;
 
     public void NewGame()
     {
-        StartCoroutine(LoadLevel(sceneToLoad));
+        StartCoroutine(LoadLevel(newGameScene));
     }
 
-    public IEnumerator LoadLevel(string name)
+    public void ButtonLoadLevel(string sceneName)
+    {
+        StartCoroutine(LoadLevel(sceneName));
+    }
+
+    public IEnumerator LoadLevel(string sceneName)
     {
         transition.SetTrigger("Start");
         yield return new WaitForSeconds(transitionTime);
-        SceneManager.LoadScene(name);
-    }
-
-    public void LoadGame()
-    {
-        // Load a saved game
+        SceneManager.LoadScene(sceneName);
     }
 
     public void QuitGame()
@@ -42,10 +42,5 @@ public class MainMenu : MonoBehaviour
     public void SetFullscreen(bool isFullscreen)
     {
         Screen.fullScreen = isFullscreen;
-    }
-
-    public void SetDialogueSFX()
-    {
-        
     }
 }
