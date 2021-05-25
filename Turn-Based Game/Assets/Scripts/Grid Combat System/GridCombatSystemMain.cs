@@ -17,10 +17,6 @@ public class GridCombatSystemMain : MonoBehaviour {
     public UnitGridCombat[] unitGridCombatArray;
     private int arrayIndex;
 
-    [Header ("Gameplay")]
-    public bool isAttacking;
-    public bool isMoving;
-
     [Header ("Unit")]
     public UnitGridCombat unitGridCombat;
     private State state;    
@@ -38,6 +34,10 @@ public class GridCombatSystemMain : MonoBehaviour {
     public Vector3[] offsets;
     public Vector3[] offsetPositions;
     public Vector3 closestPosition;
+
+    [Header ("Gameplay")]
+    public bool isAttacking;
+    public bool isMoving;
 
     [Header ("UI")]
     public int turnCount;
