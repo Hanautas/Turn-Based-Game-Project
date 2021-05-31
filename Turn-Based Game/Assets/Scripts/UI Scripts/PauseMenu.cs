@@ -5,15 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    public static bool isPaused;
-
     public GameObject pauseMenuUI;
+    public AudioSource musicSource;
+    public static bool isPaused;
 
     void Start()
     {
         pauseMenuUI.SetActive(false);
-        Time.timeScale = 1f;
         isPaused = false;
+        Time.timeScale = 1f;
     }
 
     void Update()
@@ -34,21 +34,23 @@ public class PauseMenu : MonoBehaviour
     public void Resume()
     {
         pauseMenuUI.SetActive(false);
-        Time.timeScale = 1f;
+        musicSource.Play();
         isPaused = false;
+        Time.timeScale = 1f;
     }
 
     void Pause()
     {
         pauseMenuUI.SetActive(true);
-        Time.timeScale = 0f;
+        musicSource.Pause();
         isPaused = true;
+        Time.timeScale = 0f;
     }
 
     public void MainMenu()
     {
-        Time.timeScale = 1f;
         isPaused = false;
+        Time.timeScale = 1f;
         SceneManager.LoadScene("Main Menu");
     }
 }

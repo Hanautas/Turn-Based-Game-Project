@@ -6,6 +6,8 @@ using UnityEngine.UI;
 [System.Serializable]
 public class Dialogue
 {
+    public GameObject optionsObject;
+
     [Header ("Text Options")]
     public string[] names;
 

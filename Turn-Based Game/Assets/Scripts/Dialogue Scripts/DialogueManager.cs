@@ -5,9 +5,15 @@ using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
+    public static DialogueManager instance;
+
     public Text nameText;
     public Text dialogueText;
+
+    public RectTransform transformSprite;
     public Image characterSprite;
+
+    public GameObject blockPanel;
 
     public Animator animator;
 
@@ -21,8 +27,12 @@ public class DialogueManager : MonoBehaviour
 
     public static bool isInteracting;
 
+    private GameObject optionsObject;
+
     void Start()
     {
+        instance = this;
+
         names = new Queue<string>();
         sentences = new Queue<string>();
         textColors = new Queue<Color>();
@@ -36,9 +46,9 @@ public class DialogueManager : MonoBehaviour
 
     void Update()
     {
-        if (isInteracting == true && PauseMenu.isPaused == false)
+        if (isInteracting && !PauseMenu.isPaused)
         {
-            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetMouseButtonDown(0))
             {
                 DisplayNextSentence();
             }
@@ -48,7 +58,9 @@ public class DialogueManager : MonoBehaviour
     public void StartDialogue(Dialogue dialogue)
     {
         animator.SetBool("IsOpen", true);
+        characterSprite.enabled = true;
         isInteracting = true;
+        blockPanel.SetActive(true);
 
         names.Clear();
         sentences.Clear();
@@ -94,6 +106,8 @@ public class DialogueManager : MonoBehaviour
         }
 
         //DisplayNextSentence();
+
+        optionsObject = dialogue.optionsObject;
     }
 
     IEnumerator TypeSentence(string sentence, string name, Color color, Font font, float delay, Sprite sprite, AudioClip sound)
@@ -147,6 +161,10 @@ public class DialogueManager : MonoBehaviour
 
         Sprite sprite = sprites.Dequeue();
         characterSprite.sprite = sprite;
+        characterSprite.SetNativeSize();
+
+        Vector3 spritePosition = new Vector3(0, transformSprite.rect.height / 2, 0);
+        transformSprite.anchoredPosition = Vector3.zero + spritePosition;
 
         AudioClip sound = sounds.Dequeue();
 
@@ -157,8 +175,15 @@ public class DialogueManager : MonoBehaviour
     void EndDialogue()
     {
         animator.SetBool("IsOpen", false);
+        characterSprite.enabled = false;
         isInteracting = false;
+        blockPanel.SetActive(false);
 
         StopAllCoroutines();
+
+        if (optionsObject != null)
+        {
+            optionsObject.GetComponent<OptionsTrigger>().ShowOptions();
+        }
     }
 }

@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Linq;
 
+using GridCombatSystem.Utilities;
+
 namespace Pathfinding {
 	/// <summary>
 	/// Moves the target in example scenes.
@@ -11,7 +13,7 @@ namespace Pathfinding {
 	/// It is not meant to be pretty, but it does the job.
 	/// </summary>
 	[HelpURL("http://arongranberg.com/astar/docs/class_pathfinding_1_1_target_mover.php")]
-	public class TargetMover : MonoBehaviour {
+	public class TargetMoverGrid : MonoBehaviour {
 		/// <summary>Mask for the raycast placement</summary>
 		public LayerMask mask;
 
@@ -36,7 +38,7 @@ namespace Pathfinding {
 		}
 
 		public void OnGUI () {
-			if (onlyOnDoubleClick && cam != null && Event.current.type == EventType.MouseDown && Event.current.clickCount == 2) {
+			if (UtilitiesClass.IsPointerOverUIObject() == false && onlyOnDoubleClick && cam != null && Event.current.type == EventType.MouseDown && Event.current.clickCount == 2) {
 				UpdateTargetPosition();
 			}
 		}
@@ -74,6 +76,9 @@ namespace Pathfinding {
 					}
 				}
 			}
+
+			// Round position to ints
+            target.transform.position = new Vector2(Mathf.Round(target.transform.position.x), Mathf.Round(target.transform.position.y));
 		}
 	}
 }
