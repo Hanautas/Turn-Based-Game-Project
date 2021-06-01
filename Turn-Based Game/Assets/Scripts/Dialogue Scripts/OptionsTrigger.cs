@@ -16,21 +16,20 @@ public class OptionsTrigger : MonoBehaviour
 
     private GameObject buttonPrefab;
 
-    public GameObject[] dialogueOption;
     public string[] buttonText;
 
-    public UnityEvent buttonFunctions;
+    public UnityEvent[] buttonFunctions;
 
     void Start()
     {
         canInteract = false;
 
-        animator = GetComponent<Animator>();
+        buttonPrefab = Resources.Load("DialogueButton") as GameObject;
 
         optionsBox = canvasDialogue.transform.Find("Options Box").gameObject;
-        options = canvasDialogue.transform.Find("Options Box/Options").gameObject;
+        options = canvasDialogue.transform.Find("Options Box/Background/Options").gameObject;
 
-        buttonPrefab = Resources.Load("DialogueButton") as GameObject;
+        animator = optionsBox.GetComponent<Animator>();
     }
 
     public void ShowOptions()
@@ -44,36 +43,24 @@ public class OptionsTrigger : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        for (int i = 0; i < dialogueOption.Length; i++)
+        for (int i = 0; i < buttonFunctions.Length; i++)
         {
             int count = i;
 
             GameObject optionButton = Instantiate(buttonPrefab, transform.position, Quaternion.identity) as GameObject;
 
             optionButton.transform.SetParent(options.transform, false);
-            optionButton.gameObject.transform.Find("Text").GetComponent<Text>().text = buttonText[i];
+            optionButton.transform.Find("Text").GetComponent<Text>().text = buttonText[i];
 
-            optionButton.GetComponent<Button>().onClick.AddListener(() => OnClickTriggerDialogue(count));
+            optionButton.GetComponent<Button>().onClick.AddListener(() => buttonFunctions[count].Invoke());
             optionButton.GetComponent<Button>().onClick.AddListener(() => OnClickHideOptions());
         }
-    }
-
-    public void OnClickCallFunction()
-    {
-        buttonFunctions.Invoke();
     }
 
     public void OnClickHideOptions()
     {
         animator.SetBool("IsOpen", false);
         DialogueManager.instance.blockPanel.SetActive(false);
-    }
-
-    public void OnClickTriggerDialogue(int iCount)
-    {
-        dialogueOption[iCount].GetComponent<DialogueTrigger>().TriggerDialogue();
-
-        FindObjectOfType<DialogueManager>().DisplayNextSentence();
     }
 
     private void OnTriggerEnter2D(Collider2D other)

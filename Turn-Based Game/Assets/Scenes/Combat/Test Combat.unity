@@ -22885,7 +22885,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameText: {fileID: 1488407864}
   dialogueText: {fileID: 448066770}
+  transformSprite: {fileID: 0}
   characterSprite: {fileID: 1613310510}
+  blockPanel: {fileID: 0}
   animator: {fileID: 639960942}
 --- !u!4 &1404521208
 Transform:
@@ -26810,6 +26812,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d73ca4544f004e3499598a6cb19c12e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canInteract: 0
   dialogue:
     optionsObject: {fileID: 0}
     names:
@@ -26833,7 +26836,6 @@ MonoBehaviour:
     sounds:
     - {fileID: 8300000, guid: d7cbc409c5925fe4bab44021bb1c3b39, type: 3}
     - {fileID: 8300000, guid: d7cbc409c5925fe4bab44021bb1c3b39, type: 3}
-  canInteract: 0
 --- !u!61 &1831645118
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -28995,6 +28997,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5338266239529723728, guid: 8d4c2bd5fdb316c48ad47d5a0317fde7,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5338266240570007222, guid: 8d4c2bd5fdb316c48ad47d5a0317fde7,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -29018,6 +29025,11 @@ PrefabInstance:
     - target: {fileID: 5338266240570007222, guid: 8d4c2bd5fdb316c48ad47d5a0317fde7,
         type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5338266240570007222, guid: 8d4c2bd5fdb316c48ad47d5a0317fde7,
+        type: 3}
+      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5338266240626361602, guid: 8d4c2bd5fdb316c48ad47d5a0317fde7,
