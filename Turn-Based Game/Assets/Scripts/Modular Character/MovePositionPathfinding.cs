@@ -8,7 +8,7 @@ public class MovePositionPathfinding : MonoBehaviour
 {
 
     private Action onReachedTargetPosition;
-    private List<Vector3> pathVectorList;
+    public List<Vector3> pathVectorList;
     private int pathIndex = -1;
 
     public void SetMovePosition(Vector3 movePosition, Action onReachedTargetPosition)
@@ -18,7 +18,7 @@ public class MovePositionPathfinding : MonoBehaviour
 
         foreach (Vector3 vec in pathVectorList)
         {
-            //Debug.Log(vec);
+            Debug.Log(vec);
         }
 
         if (pathVectorList.Count > 0)

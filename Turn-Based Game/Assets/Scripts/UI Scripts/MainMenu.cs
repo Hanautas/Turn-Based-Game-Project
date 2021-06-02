@@ -10,12 +10,6 @@ public class MainMenu : MonoBehaviour
 
     public Animator transition;
     public float transitionTime = 1f;
-    public string newGameScene;
-
-    public void NewGame()
-    {
-        StartCoroutine(LoadLevel(newGameScene));
-    }
 
     public void ButtonLoadLevel(string sceneName)
     {

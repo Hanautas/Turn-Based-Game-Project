@@ -6,6 +6,7 @@ using GridPathfindingSystem;
 using System.Linq;
 
 using UnityEngine.UI;
+using UnityEngine.Tilemaps;
 
 public class GridCombatSystemMain : MonoBehaviour {
     private GameObject[] playerObjectArray;
@@ -25,31 +26,33 @@ public class GridCombatSystemMain : MonoBehaviour {
     private bool canMoveThisTurn;
     private bool canAttackThisTurn;
 
-    public Vector2 aIPathVector;
+    public int maxMoveDistance;
     public Vector2 aIMoveVector;
 
-    public int maxMoveDistance;
-    public GameObject closestPlayer;
-
+    [Header ("AI")]
     public Vector3[] offsets;
     public Vector3[] offsetPositions;
+    public GameObject closestPlayer;
     public Vector3 closestPosition;
 
     [Header ("Gameplay")]
+    public TilemapCollider2D tilemapCollider;
     public bool isAttacking;
     public bool isMoving;
 
-    [Header ("UI")]
+    [Header ("Time")]
     public int turnCount;
     public float logTimeRemaining;
     public bool isLogTimer;
 
-    public Image[] actionButtons;
 
+    [Header ("UI")]
     public GameObject blackBackground;
     public GameObject gameOverWin;
     public GameObject gameOverLost;
     public TurnOrder turnOrder;
+    
+    public Image[] actionButtons;
     public GameObject[] playerUI;
 
     private enum State {
@@ -312,13 +315,36 @@ public class GridCombatSystemMain : MonoBehaviour {
         );
 
         // Reset Entire Grid ValidMovePositions
-        for (int x = 0; x < grid.GetWidth(); x++) {
-            for (int y = 0; y < grid.GetHeight(); y++) {
-                grid.GetGridObject(x, y).SetIsValidMovePosition(false);
+        if (unitGridCombat.GetTeam() == UnitGridCombat.Team.Blue)
+        {
+            for (int x = 0; x < grid.GetWidth(); x++)
+            {
+                for (int y = 0; y < grid.GetHeight(); y++)
+                {
+                    grid.GetGridObject(x, y).SetIsValidMovePosition(false);
+                }
+            }
+        }
+        else if (unitGridCombat.GetTeam() == UnitGridCombat.Team.Red)
+        {
+            for (int x = 0; x < grid.GetWidth(); x++)
+            {
+                for (int y = 0; y < grid.GetHeight(); y++)
+                {
+                    Vector3 tilemapPoint = new Vector3(x, y, 0);
+                    if (tilemapCollider.bounds.Contains(tilemapPoint))
+                    {
+                        grid.GetGridObject(x, y).SetIsValidMovePosition(true);
+                    }
+                    else if (!tilemapCollider.bounds.Contains(tilemapPoint))
+                    {
+                        grid.GetGridObject(x, y).SetIsValidMovePosition(false);
+                    }
+                }
             }
         }
 
-        //int maxMoveDistance = 5;
+        //maxMoveDistance = 5;
         if (attacking)
         {
             maxMoveDistance = unitGridCombat.attackRange + 1;
@@ -446,32 +472,35 @@ public class GridCombatSystemMain : MonoBehaviour {
                     GridSystem<GridObject> grid = GameHandler_GridCombatSystem.Instance.GetGrid();
                     GridObject gridObject = grid.GetGridObject(aIMoveVector);
 
-                    // Check if clicking on a unit position
-                    if (gridObject.GetUnitGridCombat() != null) {
-                        // Clicked on top of a Unit
-                        if (unitGridCombat.IsEnemy(gridObject.GetUnitGridCombat())) {
-                            // Clicked on an Enemy of the current unit
-                            if (unitGridCombat.CanAttackUnit(gridObject.GetUnitGridCombat())) {
-                                // Can Attack Enemy
-                                if (canAttackThisTurn) {
-                                    canAttackThisTurn = false;
-                                    // Attack Enemy
-                                    state = State.Waiting;
-                                    unitGridCombat.AttackUnit(gridObject.GetUnitGridCombat(), () => {
-                                        state = State.Normal;
-                                        EnemyTurnOver();
-                                        StartCoroutine(EnemyTurnOver());
-                                    });
+                    if (gridObject.GetIsValidMovePosition()) {
+                        // Valid Move Position
+                        // Check if clicking on a unit position
+                        if (gridObject.GetUnitGridCombat() != null) {
+                            // Clicked on top of a Unit
+                            if (unitGridCombat.IsEnemy(gridObject.GetUnitGridCombat())) {
+                                // Clicked on an Enemy of the current unit
+                                if (unitGridCombat.CanAttackUnit(gridObject.GetUnitGridCombat())) {
+                                    // Can Attack Enemy
+                                    if (canAttackThisTurn) {
+                                        canAttackThisTurn = false;
+                                        // Attack Enemy
+                                        state = State.Waiting;
+                                        unitGridCombat.AttackUnit(gridObject.GetUnitGridCombat(), () => {
+                                            state = State.Normal;
+                                            EnemyTurnOver();
+                                            StartCoroutine(EnemyTurnOver());
+                                        });
+                                    }
+                                } else {
+                                    // Cannot attack enemy
                                 }
+                                break;
                             } else {
-                                // Cannot attack enemy
+                                // Not an enemy
                             }
-                            break;
                         } else {
-                            // Not an enemy
+                            // No unit here
                         }
-                    } else {
-                        // No unit here
                     }
 
                     if (gridObject.GetIsValidMovePosition()) {
@@ -574,27 +603,32 @@ public class GridCombatSystemMain : MonoBehaviour {
             if (distance > maxMoveDistance && distance != maxMoveDistance)
             {
                 // Outside of maximum move distance, move closer to player
-                aIPathVector = new Vector2(closestPosition.x, closestPosition.y);
-                Debug.Log("Distance: " + distance + ", target too far away");
+                FindClosestPosition();
+                aIMoveVector = new Vector2(closestPosition.x, closestPosition.y);
+
+                //Debug.Log("Distance: " + distance + ", target too far away");
             }
             else if (distance <= maxMoveDistance && distance > 2.5f)
             {
                 // Inside maximum move distance, move next to player
                 FindClosestPosition();
                 aIMoveVector = new Vector2(closestPosition.x, closestPosition.y);
-                Debug.Log("Distance: " + distance + ", move closer to target");
+
+                //Debug.Log("Distance: " + distance + ", move closer to target");
             }
             else if (distance < 2.5f)
             {
                 // Next to player, attack player
                 aIMoveVector = new Vector2(closestPlayer.transform.position.x, closestPlayer.transform.position.y);
-                Debug.Log("Distance: " + distance + ", attack target");
+
+                //Debug.Log("Distance: " + distance + ", attack target");
             }
         }
         else
         {
             aIMoveVector = unitGridCombat.transform.position;
-            Debug.Log("No targets, moving to position " + aIMoveVector);
+
+            //Debug.Log("No targets, moving to position " + aIMoveVector);
         }
     }
 
