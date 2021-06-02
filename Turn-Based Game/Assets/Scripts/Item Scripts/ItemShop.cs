@@ -5,7 +5,7 @@ using UnityEngine;
 public class ItemShop : MonoBehaviour
 {
     public GameObject[] items;
-    private GameObject itemPrefab;
+    public GameObject itemPrefab;
 
     void Start()
     {

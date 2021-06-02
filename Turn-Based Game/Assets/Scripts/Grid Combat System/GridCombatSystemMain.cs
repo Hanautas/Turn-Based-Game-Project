@@ -635,24 +635,31 @@ public class GridCombatSystemMain : MonoBehaviour {
     // Find closest valid move position
     void FindClosestPosition()
     {
+        // The distance to closest offset position
         float distanceToClosestPosition = Mathf.Infinity;
 
+        // Get all 8 offset poistions to the closest player
         for (int i = 0; i < offsets.Length; i++)
         {
             offsetPositions[i] = closestPlayer.transform.position + offsets[i];
         }
 
+        // For each of the 8 offset positions
         foreach (Vector3 offsetPosition in offsetPositions)
         {
+            // The distance to offset position from unit
             float distanceToPosition = (offsetPosition - unitGridCombat.transform.position).sqrMagnitude;
 
             GridSystem<GridObject> grid = GameHandler_GridCombatSystem.Instance.GetGrid();
             GridObject gridObject = grid.GetGridObject(offsetPosition);
 
+            // If position is valid
             if (gridObject.GetIsValidMovePosition())
             {
+                // If distance to offset position is less than distance to previous offset position
                 if (distanceToPosition < distanceToClosestPosition)
                 {
+                    // The distance to closest offset position is set
                     distanceToClosestPosition = distanceToPosition;
                     closestPosition = offsetPosition;
                 }
